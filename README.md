@@ -11,6 +11,7 @@
 - 相关教程
   - https://www.bbsmax.com/A/Vx5MoW7zNr/
   - https://github.com/Microsoft/InteractiveDataDisplay.WPF
+  - https://www.cnblogs.com/zjutlitao/p/4396653.html#c
 
 ### 轨距检测
 
@@ -40,6 +41,4 @@
 # 通信模块
 
 # GPS模块
-
-# 程序详情
 

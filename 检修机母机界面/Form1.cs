@@ -24,7 +24,7 @@ namespace 检修机母机界面
         string path6 = @"C:\Users\ASUS\Desktop\DATA\7.txt";
         string path9 = @"C:\Users\ASUS\Desktop\DATA\10.txt";
 
-        //
+        
         public int t, t1;
 
         public Form1()
@@ -396,6 +396,7 @@ namespace 检修机母机界面
             t++;
             textBox9.Text = Gettime9(t);
         }
+
 
         //根据时间把时分秒拆开转化为标准格式
         public string Gettime9(int t)

@@ -28,3 +28,13 @@ C:\Users\Administrator\Desktop\上位机桌面\新建文件夹\检修机母机�
 C:\Users\Administrator\Desktop\上位机桌面\新建文件夹\检修机母机界面\检修机母机界面\obj\Debug\检修机母机界面.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\上位机桌面\新建文件夹\检修机母机界面\检修机母机界面\obj\Debug\检修机母机界面.exe
 C:\Users\Administrator\Desktop\上位机桌面\新建文件夹\检修机母机界面\检修机母机界面\obj\Debug\检修机母机界面.pdb
+E:\GitHub\HostComputerForRail\检修机母机界面\bin\Debug\检修机母机界面.exe.config
+E:\GitHub\HostComputerForRail\检修机母机界面\bin\Debug\检修机母机界面.exe
+E:\GitHub\HostComputerForRail\检修机母机界面\bin\Debug\检修机母机界面.pdb
+E:\GitHub\HostComputerForRail\检修机母机界面\obj\Debug\检修机母机界面.csprojResolveAssemblyReference.cache
+E:\GitHub\HostComputerForRail\检修机母机界面\obj\Debug\检修机母机界面.Form1.resources
+E:\GitHub\HostComputerForRail\检修机母机界面\obj\Debug\检修机母机界面.Properties.Resources.resources
+E:\GitHub\HostComputerForRail\检修机母机界面\obj\Debug\检修机母机界面.csproj.GenerateResource.cache
+E:\GitHub\HostComputerForRail\检修机母机界面\obj\Debug\检修机母机界面.csproj.CoreCompileInputs.cache
+E:\GitHub\HostComputerForRail\检修机母机界面\obj\Debug\检修机母机界面.exe
+E:\GitHub\HostComputerForRail\检修机母机界面\obj\Debug\检修机母机界面.pdb
