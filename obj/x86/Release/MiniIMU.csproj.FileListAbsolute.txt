@@ -19,3 +19,14 @@ C:\Users\Administrator\Desktop\C#-USB\obj\x86\Release\MiniIMU.csproj.CoreCompile
 C:\Users\Administrator\Desktop\C#-USB\obj\x86\Release\MiniIMU.csproj.CopyComplete
 C:\Users\Administrator\Desktop\C#-USB\obj\x86\Release\MiniIMU.exe
 C:\Users\Administrator\Desktop\C#-USB\obj\x86\Release\MiniIMU.pdb
+E:\GitHub\HostComputerForRail\bin\Release\MiniIMU.exe
+E:\GitHub\HostComputerForRail\bin\Release\MiniIMU.pdb
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.csprojResolveAssemblyReference.cache
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.csproj.ResolveComReference.cache
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.Form1.resources
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.Properties.Resources.resources
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.csproj.GenerateResource.cache
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.csproj.CoreCompileInputs.cache
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.csproj.CopyComplete
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.exe
+E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.pdb

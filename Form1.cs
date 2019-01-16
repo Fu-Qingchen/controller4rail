@@ -12,14 +12,17 @@ namespace MiniIMU
             InitializeComponent();
         }//构造函数，初始化组件
 
-        //倾角仪数据传输部分
+        /***************************************
+         * 倾角仪数据传输部分
+         **************************************/
+
         double[] a = new double[4], w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
         double Temperature, Pressure, Altitude, GroundVelocity, GPSYaw, GPSHeight;
         long Longitude, Latitude;
+
         private void DisplayRefresh(object sender, EventArgs e)
         {
             double TimeElapse = (DateTime.Now - TimeStart).TotalMilliseconds / 1000;
-            //TODO:输出
             textBox16.Text = a[0]+"";
             textBox15.Text = a[1]+"";
             textBox14.Text = a[2]+"";
@@ -29,7 +32,10 @@ namespace MiniIMU
             textBox22.Text = Angle[0]+"";
             textBox21.Text = Angle[1]+"";
             textBox20.Text = Angle[2]+"";
+            textBox18.Text = DateTime.Now+"";
+            textBox17.Text = TimeElapse + "";
         }//输出数据
+
         private void RefreshComPort(object sender, EventArgs e)
         {
             toolStripComSet.DropDownItems.Clear();
@@ -46,7 +52,9 @@ namespace MiniIMU
             toolStripComSet.DropDownItems.Add(new ToolStripSeparator());
             toolStripComSet.DropDownItems.Add("Close", null, PortClose);
         }//初始化【串口选择】下拉框
+
         ResourceManager rm = new ResourceManager(typeof(Form1));//资源管理器
+
         private void Form1_Load(object sender, EventArgs e)
         {
             RefreshComPort(null, null);
@@ -62,6 +70,7 @@ namespace MiniIMU
             textBox7.Text = "0";
             textBox10.Text = "100";
         }//初始化【串口选择】下拉框，设置波特率
+
         public enum USBCmd
         {
             NONE,
@@ -72,6 +81,7 @@ namespace MiniIMU
             UART4,
             UART5
         };
+
         private void SetBaudrate()
         {
             //设置波特率
@@ -93,10 +103,12 @@ namespace MiniIMU
             SendUSBMsg((byte)DATATYPE.CHIP_CMD, byteChipCMD, 3);
 
         }//设置比特率
+
         private bool bListening = false;
         private bool bClosing = false;
         private DateTime TimeStart = DateTime.Now;
         private Int32 Baund=115200;
+
         private void PortSelect(object sender, EventArgs e)
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
@@ -115,6 +127,7 @@ namespace MiniIMU
                 menu.Checked = false;
             }
         }
+
         private void PortClose(object sender, EventArgs e)
         {
             for (int i = 0; i < toolStripComSet.DropDownItems.Count-2; i++)
@@ -144,6 +157,7 @@ namespace MiniIMU
             Data[2] = BitConverter.ToInt16(byteTemp, 6);
             Data[3] = BitConverter.ToInt16(byteTemp, 8);
             sRightPack++;
+
             switch (byteTemp[1])
             {
                 case 0x50:
@@ -155,8 +169,6 @@ namespace MiniIMU
                     ChipTime[4] = byteTemp[6];
                     ChipTime[5] = byteTemp[7];
                     ChipTime[6] = BitConverter.ToInt16(byteTemp, 8);
-
-
                     break;
                 case 0x51:  //加速度输出
                     //Data[3] = Data[3] / 32768 * double.Parse(textBox9.Text) + double.Parse(textBox8.Text);
@@ -341,6 +353,12 @@ namespace MiniIMU
             CHIP_CMD,
             MODULE_CMD
         };
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TimeStart = DateTime.Now;
+        }
+
         public enum Baud
         {
             BAUD_115200
