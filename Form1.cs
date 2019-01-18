@@ -3,6 +3,9 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Resources;
 using UsbLibrary;
+using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing;
+
 namespace MiniIMU
 {
     public partial class Form1 : Form
@@ -10,13 +13,47 @@ namespace MiniIMU
         public Form1()
         {
             InitializeComponent();
+            InitChart();
         }//构造函数，初始化组件
+
+        private void InitChart()
+        {
+            //定义图表区域
+            this.chart1.ChartAreas.Clear();
+            ChartArea chartArea1 = new ChartArea("C1");
+            this.chart1.ChartAreas.Add(chartArea1);
+            //定义存储和显示点的容器
+            this.chart1.Series.Clear();
+            Series series1 = new Series("ax");
+            Series series2 = new Series("ay");
+            series1.ChartArea = "C1";
+            series2.ChartArea = "C1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Series.Add(series2);
+            //设置图表显示样式
+            this.chart1.Titles.Add("ax");
+            this.chart1.Titles.Add("ay");
+            this.chart1.Titles[0].Text = string.Format("加速度显示");
+            this.chart1.Titles[1].Text = string.Format("加速度显示");
+            this.chart1.Series[0].Color = Color.Red;
+            this.chart1.Series[1].Color = Color.Yellow;
+            this.chart1.Series[0].ChartType = SeriesChartType.Line;
+            this.chart1.Series[1].ChartType = SeriesChartType.Line;
+            this.chart1.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            this.chart1.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            //设置标题
+            this.chart1.Titles.Clear();
+            this.chart1.Series[0].Points.Add(a[0]);
+            this.chart1.Series[1].Points.Add(a[1]);
+            this.chart1.Series[0].Points.Clear();
+            this.chart1.Series[1].Points.Clear();
+        }
 
         /***************************************
          * 倾角仪数据传输部分
          **************************************/
 
-        double[] a = new double[4], w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
+        double[] a = new double[4] , w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
         double Temperature, Pressure, Altitude, GroundVelocity, GPSYaw, GPSHeight;
         long Longitude, Latitude;
 
@@ -34,6 +71,8 @@ namespace MiniIMU
             textBox20.Text = Angle[2]+"";
             textBox18.Text = DateTime.Now+"";
             textBox17.Text = TimeElapse + "";
+            this.chart1.Series[0].ChartType = SeriesChartType.Line;
+            this.chart1.Series[0].Points.Add(a[0]);
         }//输出数据
 
         private void RefreshComPort(object sender, EventArgs e)
@@ -120,7 +159,6 @@ namespace MiniIMU
                 spSerialPort.Open();
                 menu.Checked = true;
                 bClosing = false;
-                timer3.Start();
             }
             catch (Exception ex)
             {
@@ -357,6 +395,13 @@ namespace MiniIMU
         private void button1_Click(object sender, EventArgs e)
         {
             TimeStart = DateTime.Now;
+            timer3.Start();
+            InitChart();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //MessageBox.Show("2019");
         }
 
         public enum Baud
@@ -393,6 +438,7 @@ namespace MiniIMU
                 }
             }
         }
+
         private sbyte SendUSBMsg(byte ucType, byte[] byteSend, byte ucLength)
         {
             try
