@@ -18,35 +18,114 @@ namespace MiniIMU
 
         private void InitChart()
         {
+
+            //加速度图表
             //定义图表区域
             this.chart1.ChartAreas.Clear();
             ChartArea chartArea1 = new ChartArea("C1");
             this.chart1.ChartAreas.Add(chartArea1);
             //定义存储和显示点的容器
             this.chart1.Series.Clear();
-            Series series1 = new Series("ax");
-            Series series2 = new Series("ay");
-            series1.ChartArea = "C1";
-            series2.ChartArea = "C1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Series.Add(series2);
+            Series series11 = new Series("ax");
+            series11.ChartArea = "C1";
+            this.chart1.Series.Add(series11);
+            Series series12 = new Series("ay");
+            series12.ChartArea = "C1";
+            this.chart1.Series.Add(series12);
+            Series series13 = new Series("az");
+            series13.ChartArea = "C1";
+            this.chart1.Series.Add(series13);
             //设置图表显示样式
             this.chart1.Titles.Add("ax");
-            this.chart1.Titles.Add("ay");
             this.chart1.Titles[0].Text = string.Format("加速度显示");
-            this.chart1.Titles[1].Text = string.Format("加速度显示");
             this.chart1.Series[0].Color = Color.Red;
-            this.chart1.Series[1].Color = Color.Yellow;
+            this.chart1.Series[1].Color = Color.Orange;
+            this.chart1.Series[2].Color = Color.Green;
             this.chart1.Series[0].ChartType = SeriesChartType.Line;
             this.chart1.Series[1].ChartType = SeriesChartType.Line;
+            this.chart1.Series[2].ChartType = SeriesChartType.Line;
             this.chart1.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
             this.chart1.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            //设置标题
+            //添加点
             this.chart1.Titles.Clear();
             this.chart1.Series[0].Points.Add(a[0]);
             this.chart1.Series[1].Points.Add(a[1]);
+            this.chart1.Series[2].Points.Add(a[2]);
             this.chart1.Series[0].Points.Clear();
             this.chart1.Series[1].Points.Clear();
+            this.chart1.Series[2].Points.Clear();
+
+            //角速度图表
+            //定义图表区域
+            this.chart2.ChartAreas.Clear();
+            ChartArea chartArea2 = new ChartArea("C2");
+            this.chart2.ChartAreas.Add(chartArea2);
+            //定义存储和显示点的容器
+            this.chart2.Series.Clear();
+            Series series21 = new Series("wx");
+            series21.ChartArea = "C2";
+            this.chart2.Series.Add(series21);
+            Series series22 = new Series("wy");
+            series22.ChartArea = "C2";
+            this.chart2.Series.Add(series22);
+            Series series23 = new Series("wz");
+            series23.ChartArea = "C2";
+            this.chart2.Series.Add(series23);
+            //设置图表显示样式
+            this.chart2.Titles.Add("wx");
+            this.chart2.Titles[0].Text = string.Format("角速度显示");
+            this.chart2.Series[0].Color = Color.Red;
+            this.chart2.Series[1].Color = Color.Orange;
+            this.chart2.Series[2].Color = Color.Green;
+            this.chart2.Series[0].ChartType = SeriesChartType.Line;
+            this.chart2.Series[1].ChartType = SeriesChartType.Line;
+            this.chart2.Series[2].ChartType = SeriesChartType.Line;
+            this.chart2.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            this.chart2.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            //添加点
+            this.chart2.Titles.Clear();
+            this.chart2.Series[0].Points.Add(w[0]);
+            this.chart2.Series[1].Points.Add(w[1]);
+            this.chart2.Series[2].Points.Add(w[2]);
+            this.chart2.Series[0].Points.Clear();
+            this.chart2.Series[1].Points.Clear();
+            this.chart2.Series[2].Points.Clear();
+
+            //角速图表
+            //定义图表区域
+            this.chart3.ChartAreas.Clear();
+            ChartArea chartArea3 = new ChartArea("C3");
+            this.chart3.ChartAreas.Add(chartArea3);
+            //定义存储和显示点的容器
+            this.chart3.Series.Clear();
+            Series series31 = new Series("Anglex");
+            series31.ChartArea = "C3";
+            this.chart3.Series.Add(series31);
+            Series series32 = new Series("Angley");
+            series32.ChartArea = "C3";
+            this.chart3.Series.Add(series32);
+            Series series33 = new Series("Anglez");
+            series33.ChartArea = "C3";
+            this.chart3.Series.Add(series33);
+            //设置图表显示样式
+            this.chart3.Titles.Add("wx");
+            this.chart3.Titles[0].Text = string.Format("角速度显示");
+            this.chart3.Series[0].Color = Color.Red;
+            this.chart3.Series[1].Color = Color.Orange;
+            this.chart3.Series[2].Color = Color.Green;
+            this.chart3.Series[0].ChartType = SeriesChartType.Line;
+            this.chart3.Series[1].ChartType = SeriesChartType.Line;
+            this.chart3.Series[2].ChartType = SeriesChartType.Line;
+            this.chart3.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            this.chart3.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            //添加点
+            this.chart3.Titles.Clear();
+            this.chart3.Series[0].Points.Add(Angle[0]);
+            this.chart3.Series[1].Points.Add(Angle[1]);
+            this.chart3.Series[2].Points.Add(Angle[2]);
+            this.chart3.Series[0].Points.Clear();
+            this.chart3.Series[1].Points.Clear();
+            this.chart3.Series[2].Points.Clear();
         }
 
         /***************************************
@@ -71,8 +150,27 @@ namespace MiniIMU
             textBox20.Text = Angle[2]+"";
             textBox18.Text = DateTime.Now+"";
             textBox17.Text = TimeElapse + "";
+            //加速度折线图
             this.chart1.Series[0].ChartType = SeriesChartType.Line;
+            this.chart1.Series[1].ChartType = SeriesChartType.Line;
+            this.chart1.Series[2].ChartType = SeriesChartType.Line;
             this.chart1.Series[0].Points.Add(a[0]);
+            this.chart1.Series[1].Points.Add(a[1]);
+            this.chart1.Series[2].Points.Add(a[2]-1);
+            //角速度折线图
+            this.chart2.Series[0].ChartType = SeriesChartType.Line;
+            this.chart2.Series[1].ChartType = SeriesChartType.Line;
+            this.chart2.Series[2].ChartType = SeriesChartType.Line;
+            this.chart2.Series[0].Points.Add(w[0]);
+            this.chart2.Series[1].Points.Add(w[1]);
+            this.chart2.Series[2].Points.Add(w[2]);
+            //角度折线图
+            this.chart3.Series[0].ChartType = SeriesChartType.Line;
+            this.chart3.Series[1].ChartType = SeriesChartType.Line;
+            this.chart3.Series[2].ChartType = SeriesChartType.Line;
+            this.chart3.Series[0].Points.Add(Angle[0]);
+            this.chart3.Series[1].Points.Add(Angle[1]);
+            this.chart3.Series[2].Points.Add(Angle[2]);
         }//输出数据
 
         private void RefreshComPort(object sender, EventArgs e)
@@ -403,6 +501,7 @@ namespace MiniIMU
         {
             //MessageBox.Show("2019");
         }
+        
 
         public enum Baud
         {

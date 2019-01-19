@@ -2370,11 +2370,35 @@
   <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="chart1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>880, 33</value>
+  </data>
+  <data name="chart1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>604, 232</value>
+  </data>
+  <data name="chart1.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="chart1.Text" xml:space="preserve">
+    <value>chart1</value>
+  </data>
+  <data name="&gt;&gt;chart1.Name" xml:space="preserve">
+    <value>chart1</value>
+  </data>
+  <data name="&gt;&gt;chart1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataVisualization.Charting.Chart, System.Windows.Forms.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</value>
+  </data>
+  <data name="&gt;&gt;chart1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chart1.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="chart2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>880, 282</value>
+    <value>880, 271</value>
   </data>
   <data name="chart2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>592, 230</value>
+    <value>604, 232</value>
   </data>
   <data name="chart2.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
@@ -2392,13 +2416,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;chart2.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="chart3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>880, 512</value>
+    <value>880, 510</value>
   </data>
   <data name="chart3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>592, 230</value>
+    <value>604, 232</value>
   </data>
   <data name="chart3.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
@@ -2416,37 +2440,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;chart3.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <metadata name="programBindingSource1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>931, 17</value>
-  </metadata>
-  <data name="chart1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>880, 43</value>
-  </data>
-  <data name="chart1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>592, 230</value>
-  </data>
-  <data name="chart1.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="chart1.Text" xml:space="preserve">
-    <value>chart1</value>
-  </data>
-  <data name="&gt;&gt;chart1.Name" xml:space="preserve">
-    <value>chart1</value>
-  </data>
-  <data name="&gt;&gt;chart1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataVisualization.Charting.Chart, System.Windows.Forms.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</value>
-  </data>
-  <data name="&gt;&gt;chart1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;chart1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="programBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>717, 17</value>
+  </metadata>
+  <metadata name="programBindingSource1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>931, 17</value>
   </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -3189,9 +3189,6 @@
         BwAAwA8AAP//AAA=
 </value>
   </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
@@ -3246,16 +3243,16 @@
   <data name="&gt;&gt;usb.Type" xml:space="preserve">
     <value>UsbLibrary.UsbHidPort, UsbLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="&gt;&gt;programBindingSource1.Name" xml:space="preserve">
-    <value>programBindingSource1</value>
-  </data>
-  <data name="&gt;&gt;programBindingSource1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;programBindingSource.Name" xml:space="preserve">
     <value>programBindingSource</value>
   </data>
   <data name="&gt;&gt;programBindingSource.Type" xml:space="preserve">
+    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;programBindingSource1.Name" xml:space="preserve">
+    <value>programBindingSource1</value>
+  </data>
+  <data name="&gt;&gt;programBindingSource1.Type" xml:space="preserve">
     <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
