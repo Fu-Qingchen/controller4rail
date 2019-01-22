@@ -4,14 +4,7 @@
 
 ## 母机
 
-- 建议去除地图显示，新增波形图
-
 ### 实时折线图
-
-- 相关教程
-  - https://www.bbsmax.com/A/Vx5MoW7zNr/
-  - https://github.com/Microsoft/InteractiveDataDisplay.WPF
-  - https://www.cnblogs.com/zjutlitao/p/4396653.html#c
 
 ### 轨距检测
 
@@ -89,3 +82,5 @@
 
 # GPS模块
 
+- https://blog.csdn.net/kkkkkxiaofei/article/details/8645856
+- https://blog.csdn.net/wangzhen209/article/details/51953623
