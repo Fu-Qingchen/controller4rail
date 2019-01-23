@@ -6,7 +6,7 @@ using UsbLibrary;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
 using System.Data.SqlClient;
-
+using System.Globalization;
 
 namespace MiniIMU
 {
@@ -16,12 +16,14 @@ namespace MiniIMU
         {
             InitializeComponent();
             InitChart();
-            SQLConnect();
+            //SQLConnect();
         }//构造函数，初始化组件
 
         double[] a = new double[4] , w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
         double Temperature, Pressure, Altitude, GroundVelocity, GPSYaw, GPSHeight;
         long Longitude, Latitude;
+        string sqlDate;
+        bool flag_Start = false;
 
         private void SQLConnect()
         {
@@ -34,13 +36,23 @@ namespace MiniIMU
                 {
                     mySQL.ConnectionString = connsql;
                     mySQL.Open(); // 打开数据库连接
-                    //MessageBox.Show("数据库已连接");
                     //向数据库中插入数据
+                    var format = "yyyy-MM-dd HH:mm:ss:fffffff";
+                    var stringDate = DateTime.Now.ToString(format);
+                    var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
+                    sqlDate = "insert Inclination_OriginDate(DateTime,Accelerate_X,Accelerate_Y,Accelerate_Z,"
+                        + "AngularVelocity_X,AngularVelocity_Y,AngularVelocity_Z,"
+                        + "Inclination_X,Inclination_Y,Inclination_Z)" + "values(SYSDATETIME(),"
+                        + a[0] + "," + a[1] + "," + a[2] + ","
+                        + w[0] + "," + w[1] + "," + w[2] + ","
+                        + Angle[0] + "," + Angle[1] + "," + Angle[2] + ")";
+                    SqlCommand sqlCommand = new SqlCommand(sqlDate, mySQL);
+                    sqlCommand.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("错误信息：" + ex.Message, "出现错误");
+                MessageBox.Show("错误信息：" + ex.Message + "\n" + sqlDate, "出现错误");
             }
             finally
             {
@@ -195,6 +207,10 @@ namespace MiniIMU
             this.chart3.Series[0].Points.Add(Angle[0]);
             this.chart3.Series[1].Points.Add(Angle[1]);
             this.chart3.Series[2].Points.Add(Angle[2]);
+            if (flag_Start)
+            {
+                SQLConnect();
+            }
         }//输出数据
 
         private void RefreshComPort(object sender, EventArgs e)
@@ -519,14 +535,19 @@ namespace MiniIMU
             TimeStart = DateTime.Now;
             timer3.Start();
             InitChart();
-            //SQLConnect();
+            flag_Start = true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             //MessageBox.Show("2019");
         }
-        
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            flag_Start = false;
+        }
+
         public enum Baud
         {
             BAUD_115200
