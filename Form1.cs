@@ -5,6 +5,8 @@ using System.Resources;
 using UsbLibrary;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
+using System.Data.SqlClient;
+
 
 namespace MiniIMU
 {
@@ -14,7 +16,37 @@ namespace MiniIMU
         {
             InitializeComponent();
             InitChart();
+            SQLConnect();
         }//构造函数，初始化组件
+
+        double[] a = new double[4] , w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
+        double Temperature, Pressure, Altitude, GroundVelocity, GPSYaw, GPSHeight;
+        long Longitude, Latitude;
+
+        private void SQLConnect()
+        {
+            //使用Windows身份打开数据库
+            //string connsql = "server=FU-QINGCHEN\\SQLEXPRESS;user=sa;pwd=whuteducn;database=Test";
+            string connsql = "server=FU-QINGCHEN\\SQLEXPRESS;integrated security=SSPI;database=Test";
+            try
+            {
+                using (SqlConnection mySQL = new SqlConnection())
+                {
+                    mySQL.ConnectionString = connsql;
+                    mySQL.Open(); // 打开数据库连接
+                    //MessageBox.Show("数据库已连接");
+                    //向数据库中插入数据
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("错误信息：" + ex.Message, "出现错误");
+            }
+            finally
+            {
+                Status.Text = "SQL server connected";
+            }
+        }
 
         private void InitChart()
         {
@@ -127,14 +159,6 @@ namespace MiniIMU
             this.chart3.Series[1].Points.Clear();
             this.chart3.Series[2].Points.Clear();
         }
-
-        /***************************************
-         * 倾角仪数据传输部分
-         **************************************/
-
-        double[] a = new double[4] , w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
-        double Temperature, Pressure, Altitude, GroundVelocity, GPSYaw, GPSHeight;
-        long Longitude, Latitude;
 
         private void DisplayRefresh(object sender, EventArgs e)
         {
@@ -495,6 +519,7 @@ namespace MiniIMU
             TimeStart = DateTime.Now;
             timer3.Start();
             InitChart();
+            //SQLConnect();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -502,7 +527,6 @@ namespace MiniIMU
             //MessageBox.Show("2019");
         }
         
-
         public enum Baud
         {
             BAUD_115200
@@ -602,7 +626,6 @@ namespace MiniIMU
         private void usb_OnDeviceRemoved(object sender, EventArgs e)
         {
             Status.Text = "USB Device Removed!";
-
         }
     }
 }
