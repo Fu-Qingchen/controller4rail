@@ -22,8 +22,10 @@ namespace MiniIMU
         double[] a = new double[4] , w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
         double Temperature, Pressure, Altitude, GroundVelocity, GPSYaw, GPSHeight;
         long Longitude, Latitude;
-        string sqlDate;
+        string sqlDate, sqlWriteDate;
         bool flag_Start = false;
+        double Lg, H, Yl, Yr, Zl, Zr;//轨距,超高,左轨向,右轨向,左高度,右高度(SI)
+        double[] Angle0_integration = new double[20], a1_integration = new double[20], a2_integration = new double[20];
 
         private void SQLConnect()
         {
@@ -48,6 +50,19 @@ namespace MiniIMU
                         + Angle[0] + "," + Angle[1] + "," + Angle[2] + ")";
                     SqlCommand sqlCommand = new SqlCommand(sqlDate, mySQL);
                     sqlCommand.ExecuteNonQuery();
+                    //向数据库查询数据
+                    sqlWriteDate = "SELECT TOP 20 * FROM Inclination_OriginDate ORDER BY ID DESC;";
+                    SqlCommand sqlWriteCommand = new SqlCommand(sqlWriteDate, mySQL);
+                    SqlDataReader sqlDataReader = sqlWriteCommand.ExecuteReader();
+                    int i = 0;
+                    while (sqlDataReader.Read())
+                    {
+                        Angle0_integration[i] = Convert.ToDouble(sqlDataReader[8]);
+                        a1_integration[i] = Convert.ToDouble(sqlDataReader[3]);
+                        a2_integration[i] = Convert.ToDouble(sqlDataReader[4]);
+                        i++;
+                    }
+                    sqlDataReader.Close();
                 }
             }
             catch (Exception ex)
@@ -320,9 +335,11 @@ namespace MiniIMU
                 timer3.Stop();
             }
         }
+
         private double[] LastTime = new double[10];
         short sRightPack = 0;
         short [] ChipTime = new short[7];
+
         private void DecodeData(byte[] byteTemp)
         {
             double[] Data = new double[4];
@@ -428,9 +445,11 @@ namespace MiniIMU
                     break;
             }
         } //解码数据
+
         delegate void UpdateData(byte[] byteData);//声明一个委托
         byte[] RxBuffer = new byte[1000];
         UInt16 usRxLength = 0;
+
         private void SerialPort_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             byte[] byteTemp = new byte[1000];
@@ -467,6 +486,7 @@ namespace MiniIMU
                 bListening = false;//我用完了，ui可以关闭串口了。
             }
         }
+
         private sbyte sbSumCheck(byte[] byteData,byte byteLength)
         {
             byte byteSum=0;
@@ -475,6 +495,7 @@ namespace MiniIMU
             if (byteData[byteLength - 1] == byteSum) return 0;
             else return -1;
         }
+
         public sbyte SendMessage(Byte[] byteSend)
         {
             SendUSBMsg((byte)DATATYPE.MODULE_CMD, byteSend, (byte)byteSend.Length);
@@ -495,6 +516,7 @@ namespace MiniIMU
                 return -1;
             }
         }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -504,6 +526,7 @@ namespace MiniIMU
             catch { }
 
         }
+
         protected override void OnHandleCreated(EventArgs e)
         {
             try
@@ -513,6 +536,7 @@ namespace MiniIMU
             }
             catch (Exception err) { }
         }
+
         protected override void WndProc(ref Message m)
         {
             try
@@ -522,6 +546,7 @@ namespace MiniIMU
             }
             catch (Exception err) { }
         }
+
         public enum DATATYPE
         {
             CHIP_DATA,
@@ -546,12 +571,14 @@ namespace MiniIMU
         private void button2_Click(object sender, EventArgs e)
         {
             flag_Start = false;
+            Status.Text = "SQL server is disconnect";
         }
 
         public enum Baud
         {
             BAUD_115200
         };
+
         private void usb_OnDataRecieved(object sender, UsbLibrary.DataRecievedEventArgs args)
         {
             if (InvokeRequired)
@@ -607,8 +634,10 @@ namespace MiniIMU
             }
             return 0;
         }
+
         byte[] ModuleRxBuffer = new byte[1000];
         UInt16 usModuleRxLength = 0;
+
         private void CopeModuleMsg(byte[] byteIn, byte usLength)
         {
             byte[] byteTemp = new byte[1000];
@@ -629,24 +658,70 @@ namespace MiniIMU
                 usModuleRxLength -= 11;
             }
         }
+
         private void usb_OnSpecifiedDeviceArrived(object sender, EventArgs e)
         {
             Status.Text = "My Device Connected!";
             SetBaudrate();
 
         }
+
         private void usb_OnSpecifiedDeviceRemoved(object sender, EventArgs e)
         {
             Status.Text = "My Device DisConnected!";
         }
+
         private void usb_OnDeviceArrived(object sender, EventArgs e)
         {
             Status.Text = "Find USB Device!";
 
         }
+
         private void usb_OnDeviceRemoved(object sender, EventArgs e)
         {
             Status.Text = "USB Device Removed!";
+        }
+
+        //计算轨距
+        private void getLg()
+        {
+            Lg = 1.435;
+        }
+
+        //计算超高
+        private void getH()
+        {
+            H = Lg * Math.Tan(Angle[0]);
+        }
+
+        //计算左轨向
+        private void getYl()
+        {
+            //TODO:计算左轨向
+        }
+
+        //计算右轨向
+        private void getYr()
+        {
+            //TODO:计算左轨向
+        }
+
+        //计算左高度
+        private void getZl()
+        {
+            //TODO:计算左轨向
+        }
+
+        //计算右高度
+        private void getZr()
+        {
+            //TODO:计算左轨向
+        }
+
+        //二次数值积分计算
+        private void integration()
+        {
+            //TODO:二次数值积分计算
         }
     }
 }
