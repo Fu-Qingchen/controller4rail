@@ -25,8 +25,8 @@ namespace MiniIMU
         string sqlDate, sqlWriteDate;
         bool flag_Start = false;
         double Lg, H, Yl, Yr, Zl, Zr;//轨距,超高,左轨向,右轨向,左高度,右高度(SI)
-        double[] Angle0_integration = new double[20], a1_integration = new double[20], a2_integration = new double[20];
-        double fixA1 = 0.035063, fixA2 = 0.992344, fixAngle0 = 2.023517,e = 0.0025;
+        double[] Angle0_integration = new double[10], a1_integration = new double[10], a2_integration = new double[10];
+        double fixA1 = 0.035063, fixA2 = 0.992344, fixAngle0 = 2.023517,e = 0.002;  //这里要改
 
         private void SQLConnect()
         {
@@ -52,7 +52,7 @@ namespace MiniIMU
                     SqlCommand sqlCommand = new SqlCommand(sqlDate, mySQL);
                     sqlCommand.ExecuteNonQuery();
                     //向数据库查询数据
-                    sqlWriteDate = "SELECT TOP 20 * FROM Inclination_OriginDate ORDER BY ID DESC;";
+                    sqlWriteDate = "SELECT TOP 10 * FROM Inclination_OriginDate ORDER BY ID DESC;";
                     SqlCommand sqlWriteCommand = new SqlCommand(sqlWriteDate, mySQL);
                     SqlDataReader sqlDataReader = sqlWriteCommand.ExecuteReader();
                     int i = 0;
@@ -226,8 +226,18 @@ namespace MiniIMU
             if (flag_Start)
             {
                 SQLConnect();
+                fixMember();
+                //integration();
+                getYr();
+                getZr();
+                textBox1.Text = Lg + "";
+                textBox2.Text = H + "";
+                textBox3.Text = Yl + "";
+                textBox4.Text = Yr + "";
+                textBox5.Text = Zl + "";
+                textBox6.Text = Zr + "";
             }
-        }//输出数据
+        }//【实时输出数据】
 
         private void RefreshComPort(object sender, EventArgs e)
         {
@@ -694,41 +704,31 @@ namespace MiniIMU
         {
             H = Lg * Math.Tan(Angle[0]);
         }
-
-        //计算左轨向
-        private void getYl()
-        {
-            //TODO:计算左轨向
-        }
-
+        
         //计算右轨向
         private void getYr()
         {
-            //TODO:计算左轨向
+            //TODO:计算左轨向,先算位移，再把附加项添加上去
+            Yr = Yl;
         }
-
-        //计算左高度
-        private void getZl()
-        {
-            //TODO:计算左轨向
-        }
-
+        
         //计算右高度
         private void getZr()
         {
             //TODO:计算左轨向
+            Zr = Zl;
         }
 
-        //二次数值积分计算
-        private void integration()
+        //修正数值
+        private void fixMember()
         {
-            for(int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
-                //初始值修正
+                //TODO:初始值修正
                 a1_integration[i] = a1_integration[i] - fixA1;
                 a2_integration[i] = a2_integration[i] - fixA2;
                 Angle0_integration[i] = Angle0_integration[i] - fixAngle0;
-                //机械振动修正
+                //TODO:机械振动修正
                 if ((a1_integration[i] <= e) && (a1_integration[2] > -e))
                 {
                     a1_integration[i] = 0;
@@ -741,12 +741,6 @@ namespace MiniIMU
                 {
                     Angle0_integration[i] = 0;
                 }
-            }
-
-            //一次积分求取速度
-            for (int i = 0; i < 20; i++)
-            {
-
             }
         }
     }
