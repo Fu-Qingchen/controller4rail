@@ -25,8 +25,10 @@ namespace MiniIMU
         string sqlDate, sqlWriteDate;
         bool flag_Start = false;
         double Lg, H, Yl, Yr, Zl, Zr;//轨距,超高,左轨向,右轨向,左高度,右高度(SI)
-        double[] Angle0_integration = new double[10], a1_integration = new double[10], a2_integration = new double[10];
-        double fixA1 = 0.035063, fixA2 = 0.992344, fixAngle0 = 2.023517,e = 0.002;  //这里要改
+        double[] Angle0_integration = new double[2], a1_integration = new double[2], a2_integration = new double[2];
+        double[] v1_integration = new double[2], v2_integration = new double[2];
+        double[] y_integration = new double[2], z_integration = new double[2];
+        double fixA1 = 0.0435063, fixA2 = 0.990344, fixAngle0 = 2.023517,e = 0.003;  //这里要改
 
         private void SQLConnect()
         {
@@ -52,18 +54,18 @@ namespace MiniIMU
                     SqlCommand sqlCommand = new SqlCommand(sqlDate, mySQL);
                     sqlCommand.ExecuteNonQuery();
                     //向数据库查询数据
-                    sqlWriteDate = "SELECT TOP 10 * FROM Inclination_OriginDate ORDER BY ID DESC;";
-                    SqlCommand sqlWriteCommand = new SqlCommand(sqlWriteDate, mySQL);
-                    SqlDataReader sqlDataReader = sqlWriteCommand.ExecuteReader();
-                    int i = 0;
-                    while (sqlDataReader.Read())
-                    {
-                        Angle0_integration[i] = Convert.ToDouble(sqlDataReader[8]);
-                        a1_integration[i] = Convert.ToDouble(sqlDataReader[3]);
-                        a2_integration[i] = Convert.ToDouble(sqlDataReader[4]);
-                        i++;
-                    }
-                    sqlDataReader.Close();
+                    //sqlWriteDate = "SELECT TOP 2 * FROM Inclination_OriginDate ORDER BY ID DESC;";
+                    //SqlCommand sqlWriteCommand = new SqlCommand(sqlWriteDate, mySQL);
+                    //SqlDataReader sqlDataReader = sqlWriteCommand.ExecuteReader();
+                    //int i = 0;
+                    //while (sqlDataReader.Read())
+                    //{
+                    //    Angle0_integration[i] = Convert.ToDouble(sqlDataReader[8]);
+                    //    a1_integration[i] = Convert.ToDouble(sqlDataReader[3]);
+                    //   a2_integration[i] = Convert.ToDouble(sqlDataReader[4]);
+                    //   i++;
+                    //}
+                    //sqlDataReader.Close();
                 }
             }
             catch (Exception ex)
@@ -226,9 +228,15 @@ namespace MiniIMU
             if (flag_Start)
             {
                 SQLConnect();
+                a1_integration[0] = a1_integration[1];
+                a2_integration[0] = a2_integration[1];
+                a1_integration[1] = a[1];
+                a2_integration[1] = a[2];
                 fixMember();
-                //integration();
+                integration();
+                getYl();
                 getYr();
+                getZl();
                 getZr();
                 textBox1.Text = Lg + "";
                 textBox2.Text = H + "";
@@ -704,14 +712,28 @@ namespace MiniIMU
         {
             H = Lg * Math.Tan(Angle[0]);
         }
-        
+
+        //计算左轨向
+        private void getYl()
+        {
+            //TODO:计算左轨向,先算位移，再把附加项添加上去
+            Yl = y_integration[0];
+        }
+
         //计算右轨向
         private void getYr()
         {
             //TODO:计算左轨向,先算位移，再把附加项添加上去
             Yr = Yl;
         }
-        
+
+        //计算左高度
+        private void getZl()
+        {
+            //TODO:计算左轨向
+            Zl = z_integration[0];
+        }
+
         //计算右高度
         private void getZr()
         {
@@ -722,26 +744,38 @@ namespace MiniIMU
         //修正数值
         private void fixMember()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
             {
-                //TODO:初始值修正
+                //初始值修正
                 a1_integration[i] = a1_integration[i] - fixA1;
                 a2_integration[i] = a2_integration[i] - fixA2;
                 Angle0_integration[i] = Angle0_integration[i] - fixAngle0;
                 //TODO:机械振动修正
-                if ((a1_integration[i] <= e) && (a1_integration[2] > -e))
+                if ((a1_integration[i] <= e) && (a1_integration[i] > -e))
                 {
                     a1_integration[i] = 0;
                 }
-                if ((a2_integration[i] <= e) && (a2_integration[2] > -e))
+                if ((a2_integration[i] <= e) && (a2_integration[i] > -e))
                 {
                     a2_integration[i] = 0;
                 }
-                if ((Angle0_integration[i] <= e) && (Angle0_integration[2] > -e))
+                if ((Angle0_integration[i] <= e) && (Angle0_integration[i] > -e))
                 {
                     Angle0_integration[i] = 0;
                 }
             }
+        }
+
+        private void integration()
+        {
+            v1_integration[1] = v1_integration[0] + (a1_integration[0] + a1_integration[1]) / 2 * timer3.Interval / 1000;
+            y_integration[1] = y_integration[0] + (v1_integration[0] + v1_integration[1])/ 2 * timer3.Interval / 1000;
+            y_integration[0] = y_integration[1];
+            v1_integration[0] = v1_integration[1];
+            v2_integration[1] = v2_integration[0] + (a2_integration[0] + a2_integration[1]) / 2 * timer3.Interval / 1000;
+            z_integration[1] = z_integration[0] + (v2_integration[0] + v2_integration[1]) / 2 * timer3.Interval / 1000;
+            v2_integration[0] = v2_integration[1];
+            z_integration[0] = z_integration[1];
         }
     }
 }
