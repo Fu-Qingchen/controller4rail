@@ -25,10 +25,11 @@ namespace MiniIMU
         string sqlDate, sqlWriteDate;
         bool flag_Start = false;
         double Lg, H, Yl, Yr, Zl, Zr;//轨距,超高,左轨向,右轨向,左高度,右高度(SI)
-        double[] Angle0_integration = new double[2], a1_integration = new double[2], a2_integration = new double[2];
-        double[] v1_integration = new double[2], v2_integration = new double[2];
-        double[] y_integration = new double[2], z_integration = new double[2];
-        double fixA1 = 0.0435063, fixA2 = 0.990344, fixAngle0 = 2.023517,e = 0.003;  //这里要改
+        double[] Angle0_integration = {0,0}, a1_integration = { 0, 0 }, a2_integration = { 0, 0 };
+        double[] v1_integration = { 0, 0 }, v2_integration = { 0, 0 };
+        double[] y_integration = { 0, 0 }, z_integration = { 0, 0 };
+        double fixA1 = 0, fixA2 = -0.014, fixAngle0 = 0,e = 0.003;  //这里要改
+        int a_count = 0;
 
         private void SQLConnect()
         {
@@ -192,6 +193,18 @@ namespace MiniIMU
 
         private void DisplayRefresh(object sender, EventArgs e)
         {
+            double x = Angle[0] / 180 * Math.PI, y = Angle[1] / 180 * Math.PI, z = Angle[2] / 180 * Math.PI;
+            double a_x = a[0], a_y = a[1], a_z = a[2];
+            //T1:消除重力加速度
+            a[0] = Math.Cos(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) - Math.Sin(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
+            a[1] = Math.Sin(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) + Math.Cos(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
+            a[2] = Math.Cos(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x)) - a_x * Math.Sin(y) - 1;
+            //T2:还原
+            a_x = a[0]; a_y = a[1]; a_z = a[2];
+            a[0] = Math.Cos(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z)) - a_z * Math.Sin(y);
+            a[1] = Math.Sin(x) * (a_z * Math.Cos(y) + Math.Sin(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z))) + Math.Cos(x) * (a_y * Math.Cos(z) - a_x * Math.Sin(z));
+            a[2] = Math.Cos(x) * (a_z * Math.Cos(y) + Math.Sin(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z))) - Math.Sin(x) * (a_y * Math.Cos(z) - a_x * Math.Sin(z));
+            //removeG();
             double TimeElapse = (DateTime.Now - TimeStart).TotalMilliseconds / 1000;
             textBox16.Text = a[0]+"";
             textBox15.Text = a[1]+"";
@@ -210,14 +223,14 @@ namespace MiniIMU
             this.chart1.Series[2].ChartType = SeriesChartType.Line;
             this.chart1.Series[0].Points.Add(a[0]);
             this.chart1.Series[1].Points.Add(a[1]);
-            this.chart1.Series[2].Points.Add(a[2]-1);
-            //角速度折线图
+            this.chart1.Series[2].Points.Add(a[2]);
+            //速度折线图
             this.chart2.Series[0].ChartType = SeriesChartType.Line;
             this.chart2.Series[1].ChartType = SeriesChartType.Line;
             this.chart2.Series[2].ChartType = SeriesChartType.Line;
-            this.chart2.Series[0].Points.Add(w[0]);
-            this.chart2.Series[1].Points.Add(w[1]);
-            this.chart2.Series[2].Points.Add(w[2]);
+            this.chart2.Series[0].Points.Add(v1_integration[1]);
+            this.chart2.Series[1].Points.Add(v2_integration[1]);
+            this.chart2.Series[2].Points.Add(v1_integration[1]);
             //角度折线图
             this.chart3.Series[0].ChartType = SeriesChartType.Line;
             this.chart3.Series[1].ChartType = SeriesChartType.Line;
@@ -701,6 +714,21 @@ namespace MiniIMU
             Status.Text = "USB Device Removed!";
         }
 
+        //坐标变换消除重力加速度
+        private void removeG()
+        {
+            double x = Angle[0] / 180 * Math.PI, y = Angle[1] / 180 * Math.PI, z = Angle[2] / 180 * Math.PI;
+            double a_x = a[0], a_y = a[1], a_z = a[2];
+            //T1:消除重力加速度
+            a[0] = Math.Cos(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) - Math.Sin(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
+            a[1] = Math.Sin(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) + Math.Cos(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
+            a[2] = Math.Cos(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x)) - a_x * Math.Sin(y)-1;
+            //T2:还原
+            a[0] = Math.Cos(y)*(a_x* Math.Cos(z) + a_y* Math.Sin(z)) - a_z* Math.Sin(y);
+            a[1] = Math.Sin(x)*(a_z* Math.Cos(y) + Math.Sin(y)*(a_x* Math.Cos(z) + a_y* Math.Sin(z))) + Math.Cos(x)*(a_y* Math.Cos(z) - a_x* Math.Sin(z));
+            a[2] = Math.Cos(x)*(a_z* Math.Cos(y) + Math.Sin(y)*(a_x* Math.Cos(z) + a_y* Math.Sin(z))) - Math.Sin(x)*(a_y* Math.Cos(z) - a_x* Math.Sin(z));
+        }
+
         //计算轨距
         private void getLg()
         {
@@ -717,7 +745,7 @@ namespace MiniIMU
         private void getYl()
         {
             //TODO:计算左轨向,先算位移，再把附加项添加上去
-            Yl = y_integration[0];
+            Yl = y_integration[1];
         }
 
         //计算右轨向
@@ -768,14 +796,33 @@ namespace MiniIMU
 
         private void integration()
         {
-            v1_integration[1] = v1_integration[0] + (a1_integration[0] + a1_integration[1]) / 2 * timer3.Interval / 1000;
-            y_integration[1] = y_integration[0] + (v1_integration[0] + v1_integration[1])/ 2 * timer3.Interval / 1000;
-            y_integration[0] = y_integration[1];
+
+            v1_integration[1] = v1_integration[0] + ((3 * a1_integration[1] - a1_integration[0]) / 2) * timer3.Interval / 1000;
+            y_integration[1] = y_integration[0] + ((3 * v1_integration[1] - v1_integration[0])/ 2) * timer3.Interval / 1000;
             v1_integration[0] = v1_integration[1];
-            v2_integration[1] = v2_integration[0] + (a2_integration[0] + a2_integration[1]) / 2 * timer3.Interval / 1000;
-            z_integration[1] = z_integration[0] + (v2_integration[0] + v2_integration[1]) / 2 * timer3.Interval / 1000;
+            y_integration[0] = y_integration[1];
+
+            v2_integration[1] = v2_integration[0] + ((3 * a2_integration[1] - a2_integration[0]) / 2) * timer3.Interval / 1000;
+            z_integration[1] = z_integration[0] + ((3 * v2_integration[1] - v2_integration[0]) / 2 )* timer3.Interval / 1000;
             v2_integration[0] = v2_integration[1];
             z_integration[0] = z_integration[1];
+
+            if (a1_integration[1] == 0 && a2_integration[1] == 0)
+            {
+                a_count++;
+            }
+            else
+            {
+                a_count = 0;
+            }
+
+            if (a_count >= 5)
+            {
+                v1_integration[1] = 0;
+                v1_integration[0] = 0;
+                v2_integration[1] = 0;
+                v2_integration[0] = 0;
+            }
         }
     }
 }
