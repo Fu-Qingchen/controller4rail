@@ -117,6 +117,7 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart3 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.programBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.programBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.toolStrip1.SuspendLayout();
@@ -176,7 +177,7 @@
             // timer3
             // 
             this.timer3.Enabled = true;
-            this.timer3.Interval = 200;
+            this.timer3.Interval = 20;
             this.timer3.Tick += new System.EventHandler(this.DisplayRefresh);
             // 
             // usb
@@ -626,6 +627,12 @@
             series3.Name = "Series1";
             this.chart3.Series.Add(series3);
             // 
+            // webBrowser1
+            // 
+            resources.ApplyResources(this.webBrowser1, "webBrowser1");
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Url = new System.Uri("file:///E:/GitHub/HostComputerForRail/map.html", System.UriKind.Absolute);
+            // 
             // programBindingSource
             // 
             this.programBindingSource.DataSource = typeof(MiniIMU.Program);
@@ -639,6 +646,7 @@
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.chart3);
             this.Controls.Add(this.chart2);
             this.Controls.Add(this.chart1);
@@ -752,6 +760,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart3;
+        public System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 

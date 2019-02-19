@@ -28,7 +28,7 @@ namespace MiniIMU
         double[] Angle0_integration = {0,0}, a1_integration = { 0, 0 }, a2_integration = { 0, 0 };
         double[] v1_integration = { 0, 0 }, v2_integration = { 0, 0 };
         double[] y_integration = { 0, 0 }, z_integration = { 0, 0 };
-        double fixA1 = 0, fixA2 = -0.014, fixAngle0 = 0,e = 0.003;  //这里要改
+        double fixA1 = 0, fixA2 = -0.008, fixAngle0 = 0,e = 0.002;  //这里要改
         int a_count = 0;
 
         private void SQLConnect()
@@ -228,9 +228,9 @@ namespace MiniIMU
             this.chart2.Series[0].ChartType = SeriesChartType.Line;
             this.chart2.Series[1].ChartType = SeriesChartType.Line;
             this.chart2.Series[2].ChartType = SeriesChartType.Line;
-            this.chart2.Series[0].Points.Add(v1_integration[1]);
-            this.chart2.Series[1].Points.Add(v2_integration[1]);
-            this.chart2.Series[2].Points.Add(v1_integration[1]);
+            this.chart2.Series[0].Points.Add(a1_integration[1]);
+            this.chart2.Series[1].Points.Add(v1_integration[1]);
+            this.chart2.Series[2].Points.Add(y_integration[1]);
             //角度折线图
             this.chart3.Series[0].ChartType = SeriesChartType.Line;
             this.chart3.Series[1].ChartType = SeriesChartType.Line;
@@ -282,7 +282,7 @@ namespace MiniIMU
         private void Form1_Load(object sender, EventArgs e)
         {
             RefreshComPort(null, null);
-            Baund = 9600;
+            Baund = 115200;
             SetBaudrate();
 
             textBox1.Text = "1435.6";
@@ -317,11 +317,11 @@ namespace MiniIMU
 
             byteChipCMD[0] = (byte)USBCmd.UART1;
             SendUSBMsg((byte)DATATYPE.CHIP_CMD, byteChipCMD, 3);
-            Thread.Sleep(100);
+            Thread.Sleep(10);
 
             byteChipCMD[0] = (byte)USBCmd.UART2;
             SendUSBMsg((byte)DATATYPE.CHIP_CMD, byteChipCMD, 3);
-            Thread.Sleep(100);
+            Thread.Sleep(10);
 
             byteChipCMD[0] = (byte)USBCmd.UART3;
             SendUSBMsg((byte)DATATYPE.CHIP_CMD, byteChipCMD, 3);
@@ -578,7 +578,7 @@ namespace MiniIMU
             }
             catch (Exception err) { }
         }
-
+        
         public enum DATATYPE
         {
             CHIP_DATA,
@@ -695,7 +695,6 @@ namespace MiniIMU
         {
             Status.Text = "My Device Connected!";
             SetBaudrate();
-
         }
 
         private void usb_OnSpecifiedDeviceRemoved(object sender, EventArgs e)
@@ -759,7 +758,7 @@ namespace MiniIMU
         private void getZl()
         {
             //TODO:计算左轨向
-            Zl = z_integration[0];
+            Zl = z_integration[1];
         }
 
         //计算右高度
@@ -772,13 +771,12 @@ namespace MiniIMU
         //修正数值
         private void fixMember()
         {
+            //初始值修正
+            a1_integration[1] = a1_integration[1] - fixA1;
+            a2_integration[1] = a2_integration[1] - fixA2;
+            Angle0_integration[1] = Angle0_integration[1] - fixAngle0;
             for (int i = 0; i < 2; i++)
-            {
-                //初始值修正
-                a1_integration[i] = a1_integration[i] - fixA1;
-                a2_integration[i] = a2_integration[i] - fixA2;
-                Angle0_integration[i] = Angle0_integration[i] - fixAngle0;
-                //TODO:机械振动修正
+            {                //TODO:机械振动修正
                 if ((a1_integration[i] <= e) && (a1_integration[i] > -e))
                 {
                     a1_integration[i] = 0;
@@ -797,13 +795,13 @@ namespace MiniIMU
         private void integration()
         {
 
-            v1_integration[1] = v1_integration[0] + ((3 * a1_integration[1] - a1_integration[0]) / 2) * timer3.Interval / 1000;
-            y_integration[1] = y_integration[0] + ((3 * v1_integration[1] - v1_integration[0])/ 2) * timer3.Interval / 1000;
+            v1_integration[1] = v1_integration[0] + ((a1_integration[1] + a1_integration[0]) / 2) * timer3.Interval/1000;
+            y_integration[1] = y_integration[0] + ((v1_integration[1] + v1_integration[0])/ 2) * timer3.Interval/1000;
             v1_integration[0] = v1_integration[1];
             y_integration[0] = y_integration[1];
 
-            v2_integration[1] = v2_integration[0] + ((3 * a2_integration[1] - a2_integration[0]) / 2) * timer3.Interval / 1000;
-            z_integration[1] = z_integration[0] + ((3 * v2_integration[1] - v2_integration[0]) / 2 )* timer3.Interval / 1000;
+            v2_integration[1] = v2_integration[0] + ((a2_integration[1] + a2_integration[0]) / 2) * timer3.Interval/1000;
+            z_integration[1] = z_integration[0] + ((v2_integration[1] + v2_integration[0]) / 2 )* timer3.Interval/1000;
             v2_integration[0] = v2_integration[1];
             z_integration[0] = z_integration[1];
 
