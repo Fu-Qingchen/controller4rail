@@ -7,6 +7,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
 using System.Data.SqlClient;
 using System.Globalization;
+using AForge.Video.DirectShow;
 
 namespace MiniIMU
 {
@@ -22,7 +23,7 @@ namespace MiniIMU
         double[] a = new double[4] , w = new double[4], h = new double[4], Angle = new double[4], Port = new double[4];
         double Temperature, Pressure, Altitude, GroundVelocity, GPSYaw, GPSHeight;
         long Longitude, Latitude;
-        string sqlDate, sqlWriteDate;
+        string sqlDate; //, sqlWriteDate;
         bool flag_Start = false;
         double Lg, H, Yl, Yr, Zl, Zr;//轨距,超高,左轨向,右轨向,左高度,右高度(SI)
         double[] Angle0_integration = {0,0}, a1_integration = { 0, 0 }, a2_integration = { 0, 0 };
@@ -30,6 +31,11 @@ namespace MiniIMU
         double[] y_integration = { 0, 0 }, z_integration = { 0, 0 };
         double fixA1 = 0, fixA2 = -0.008, fixAngle0 = 0,e = 0.002;  //这里要改
         int a_count = 0;
+
+        //监控部分
+        private FilterInfoCollection videoDevices;
+        private VideoCaptureDevice videoDevice;
+        private VideoCapabilities[] videoCapabilities;
 
         private void SQLConnect()
         {
@@ -118,77 +124,77 @@ namespace MiniIMU
             this.chart1.Series[1].Points.Clear();
             this.chart1.Series[2].Points.Clear();
 
-            //角速度图表
-            //定义图表区域
-            this.chart2.ChartAreas.Clear();
-            ChartArea chartArea2 = new ChartArea("C2");
-            this.chart2.ChartAreas.Add(chartArea2);
-            //定义存储和显示点的容器
-            this.chart2.Series.Clear();
-            Series series21 = new Series("wx");
-            series21.ChartArea = "C2";
-            this.chart2.Series.Add(series21);
-            Series series22 = new Series("wy");
-            series22.ChartArea = "C2";
-            this.chart2.Series.Add(series22);
-            Series series23 = new Series("wz");
-            series23.ChartArea = "C2";
-            this.chart2.Series.Add(series23);
-            //设置图表显示样式
-            this.chart2.Titles.Add("wx");
-            this.chart2.Titles[0].Text = string.Format("角速度显示");
-            this.chart2.Series[0].Color = Color.Red;
-            this.chart2.Series[1].Color = Color.Orange;
-            this.chart2.Series[2].Color = Color.Green;
-            this.chart2.Series[0].ChartType = SeriesChartType.Line;
-            this.chart2.Series[1].ChartType = SeriesChartType.Line;
-            this.chart2.Series[2].ChartType = SeriesChartType.Line;
-            this.chart2.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            this.chart2.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            //添加点
-            this.chart2.Titles.Clear();
-            this.chart2.Series[0].Points.Add(w[0]);
-            this.chart2.Series[1].Points.Add(w[1]);
-            this.chart2.Series[2].Points.Add(w[2]);
-            this.chart2.Series[0].Points.Clear();
-            this.chart2.Series[1].Points.Clear();
-            this.chart2.Series[2].Points.Clear();
+            ////角速度图表
+            ////定义图表区域
+            //this.chart2.chartareas.clear();
+            //chartarea chartarea2 = new chartarea("c2");
+            //this.chart2.chartareas.add(chartarea2);
+            ////定义存储和显示点的容器
+            //this.chart2.series.clear();
+            //series series21 = new series("wx");
+            //series21.chartarea = "c2";
+            //this.chart2.series.add(series21);
+            //series series22 = new series("wy");
+            //series22.chartarea = "c2";
+            //this.chart2.series.add(series22);
+            //series series23 = new series("wz");
+            //series23.chartarea = "c2";
+            //this.chart2.series.add(series23);
+            ////设置图表显示样式
+            //this.chart2.titles.add("wx");
+            //this.chart2.titles[0].text = string.format("角速度显示");
+            //this.chart2.series[0].color = color.red;
+            //this.chart2.series[1].color = color.orange;
+            //this.chart2.series[2].color = color.green;
+            //this.chart2.series[0].charttype = seriescharttype.line;
+            //this.chart2.series[1].charttype = seriescharttype.line;
+            //this.chart2.series[2].charttype = seriescharttype.line;
+            //this.chart2.chartareas[0].axisx.majorgrid.linecolor = system.drawing.color.silver;
+            //this.chart2.chartareas[0].axisy.majorgrid.linecolor = system.drawing.color.silver;
+            ////添加点
+            //this.chart2.titles.clear();
+            //this.chart2.series[0].points.add(w[0]);
+            //this.chart2.series[1].points.add(w[1]);
+            //this.chart2.series[2].points.add(w[2]);
+            //this.chart2.series[0].points.clear();
+            //this.chart2.series[1].points.clear();
+            //this.chart2.series[2].points.clear();
 
-            //角速图表
-            //定义图表区域
-            this.chart3.ChartAreas.Clear();
-            ChartArea chartArea3 = new ChartArea("C3");
-            this.chart3.ChartAreas.Add(chartArea3);
-            //定义存储和显示点的容器
-            this.chart3.Series.Clear();
-            Series series31 = new Series("Anglex");
-            series31.ChartArea = "C3";
-            this.chart3.Series.Add(series31);
-            Series series32 = new Series("Angley");
-            series32.ChartArea = "C3";
-            this.chart3.Series.Add(series32);
-            Series series33 = new Series("Anglez");
-            series33.ChartArea = "C3";
-            this.chart3.Series.Add(series33);
-            //设置图表显示样式
-            this.chart3.Titles.Add("wx");
-            this.chart3.Titles[0].Text = string.Format("角速度显示");
-            this.chart3.Series[0].Color = Color.Red;
-            this.chart3.Series[1].Color = Color.Orange;
-            this.chart3.Series[2].Color = Color.Green;
-            this.chart3.Series[0].ChartType = SeriesChartType.Line;
-            this.chart3.Series[1].ChartType = SeriesChartType.Line;
-            this.chart3.Series[2].ChartType = SeriesChartType.Line;
-            this.chart3.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            this.chart3.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            //添加点
-            this.chart3.Titles.Clear();
-            this.chart3.Series[0].Points.Add(Angle[0]);
-            this.chart3.Series[1].Points.Add(Angle[1]);
-            this.chart3.Series[2].Points.Add(Angle[2]);
-            this.chart3.Series[0].Points.Clear();
-            this.chart3.Series[1].Points.Clear();
-            this.chart3.Series[2].Points.Clear();
+            ////角速图表
+            ////定义图表区域
+            //this.chart3.chartareas.clear();
+            //chartarea chartarea3 = new chartarea("c3");
+            //this.chart3.chartareas.add(chartarea3);
+            ////定义存储和显示点的容器
+            //this.chart3.series.clear();
+            //series series31 = new series("anglex");
+            //series31.chartarea = "c3";
+            //this.chart3.series.add(series31);
+            //series series32 = new series("angley");
+            //series32.chartarea = "c3";
+            //this.chart3.series.add(series32);
+            //series series33 = new series("anglez");
+            //series33.chartarea = "c3";
+            //this.chart3.series.add(series33);
+            ////设置图表显示样式
+            //this.chart3.titles.add("wx");
+            //this.chart3.titles[0].text = string.format("角速度显示");
+            //this.chart3.series[0].color = color.red;
+            //this.chart3.series[1].color = color.orange;
+            //this.chart3.series[2].color = color.green;
+            //this.chart3.series[0].charttype = seriescharttype.line;
+            //this.chart3.series[1].charttype = seriescharttype.line;
+            //this.chart3.series[2].charttype = seriescharttype.line;
+            //this.chart3.chartareas[0].axisx.majorgrid.linecolor = system.drawing.color.silver;
+            //this.chart3.chartareas[0].axisy.majorgrid.linecolor = system.drawing.color.silver;
+            ////添加点
+            //this.chart3.titles.clear();
+            //this.chart3.series[0].points.add(angle[0]);
+            //this.chart3.series[1].points.add(angle[1]);
+            //this.chart3.series[2].points.add(angle[2]);
+            //this.chart3.series[0].points.clear();
+            //this.chart3.series[1].points.clear();
+            //this.chart3.series[2].points.clear();
         }
 
         private void DisplayRefresh(object sender, EventArgs e)
@@ -196,14 +202,14 @@ namespace MiniIMU
             double x = Angle[0] / 180 * Math.PI, y = Angle[1] / 180 * Math.PI, z = Angle[2] / 180 * Math.PI;
             double a_x = a[0], a_y = a[1], a_z = a[2];
             //T1:消除重力加速度
-            a[0] = Math.Cos(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) - Math.Sin(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
-            a[1] = Math.Sin(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) + Math.Cos(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
-            a[2] = Math.Cos(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x)) - a_x * Math.Sin(y) - 1;
+            //a[0] = Math.Cos(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) - Math.Sin(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
+            //a[1] = Math.Sin(z) * (a_x * Math.Cos(y) + Math.Sin(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x))) + Math.Cos(z) * (a_y * Math.Cos(x) - a_z * Math.Sin(x));
+            //a[2] = Math.Cos(y) * (a_z * Math.Cos(x) + a_y * Math.Sin(x)) - a_x * Math.Sin(y) - 1;
             //T2:还原
-            a_x = a[0]; a_y = a[1]; a_z = a[2];
-            a[0] = Math.Cos(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z)) - a_z * Math.Sin(y);
-            a[1] = Math.Sin(x) * (a_z * Math.Cos(y) + Math.Sin(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z))) + Math.Cos(x) * (a_y * Math.Cos(z) - a_x * Math.Sin(z));
-            a[2] = Math.Cos(x) * (a_z * Math.Cos(y) + Math.Sin(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z))) - Math.Sin(x) * (a_y * Math.Cos(z) - a_x * Math.Sin(z));
+            //a_x = a[0]; a_y = a[1]; a_z = a[2];
+            //a[0] = Math.Cos(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z)) - a_z * Math.Sin(y);
+            //a[1] = Math.Sin(x) * (a_z * Math.Cos(y) + Math.Sin(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z))) + Math.Cos(x) * (a_y * Math.Cos(z) - a_x * Math.Sin(z));
+            //a[2] = Math.Cos(x) * (a_z * Math.Cos(y) + Math.Sin(y) * (a_x * Math.Cos(z) + a_y * Math.Sin(z))) - Math.Sin(x) * (a_y * Math.Cos(z) - a_x * Math.Sin(z));
             //removeG();
             double TimeElapse = (DateTime.Now - TimeStart).TotalMilliseconds / 1000;
             textBox16.Text = a[0]+"";
@@ -224,20 +230,20 @@ namespace MiniIMU
             this.chart1.Series[0].Points.Add(a[0]);
             this.chart1.Series[1].Points.Add(a[1]);
             this.chart1.Series[2].Points.Add(a[2]);
-            //速度折线图
-            this.chart2.Series[0].ChartType = SeriesChartType.Line;
-            this.chart2.Series[1].ChartType = SeriesChartType.Line;
-            this.chart2.Series[2].ChartType = SeriesChartType.Line;
-            this.chart2.Series[0].Points.Add(a1_integration[1]);
-            this.chart2.Series[1].Points.Add(v1_integration[1]);
-            this.chart2.Series[2].Points.Add(y_integration[1]);
-            //角度折线图
-            this.chart3.Series[0].ChartType = SeriesChartType.Line;
-            this.chart3.Series[1].ChartType = SeriesChartType.Line;
-            this.chart3.Series[2].ChartType = SeriesChartType.Line;
-            this.chart3.Series[0].Points.Add(Angle[0]);
-            this.chart3.Series[1].Points.Add(Angle[1]);
-            this.chart3.Series[2].Points.Add(Angle[2]);
+            ////速度折线图
+            //this.chart2.Series[0].ChartType = SeriesChartType.Line;
+            //this.chart2.Series[1].ChartType = SeriesChartType.Line;
+            //this.chart2.Series[2].ChartType = SeriesChartType.Line;
+            //this.chart2.Series[0].Points.Add(a1_integration[1]);
+            //this.chart2.Series[1].Points.Add(v1_integration[1]);
+            //this.chart2.Series[2].Points.Add(y_integration[1]);
+            ////角度折线图
+            //this.chart3.Series[0].ChartType = SeriesChartType.Line;
+            //this.chart3.Series[1].ChartType = SeriesChartType.Line;
+            //this.chart3.Series[2].ChartType = SeriesChartType.Line;
+            //this.chart3.Series[0].Points.Add(Angle[0]);
+            //this.chart3.Series[1].Points.Add(Angle[1]);
+            //this.chart3.Series[2].Points.Add(Angle[2]);
             if (flag_Start)
             {
                 SQLConnect();
@@ -293,7 +299,22 @@ namespace MiniIMU
             textBox6.Text = "0.1";
             textBox7.Text = "0";
             textBox10.Text = "100";
-        }//初始化【串口选择】下拉框，设置波特率
+
+            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            if (videoDevices.Count != 0)
+            {
+                foreach (FilterInfo device in videoDevices)
+                {
+                    comboBox1.Items.Add(device.Name);
+                }
+            }
+            else
+            {
+                comboBox1.Items.Add("没有找到摄像头");
+            }
+
+            comboBox1.SelectedIndex = 0;
+        }//初始化【串口选择】下拉框，加载摄像头
 
         public enum USBCmd
         {
@@ -557,6 +578,7 @@ namespace MiniIMU
             }
             catch { }
 
+            DisConnect();
         }
 
         protected override void OnHandleCreated(EventArgs e)
@@ -578,7 +600,8 @@ namespace MiniIMU
             }
             catch (Exception err) { }
         }
-        
+
+
         public enum DATATYPE
         {
             CHIP_DATA,
@@ -587,12 +610,69 @@ namespace MiniIMU
             MODULE_CMD
         };
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (videoDevices.Count != 0)
+            {
+                videoDevice = new VideoCaptureDevice(videoDevices[comboBox1.SelectedIndex].MonikerString);
+                GetDeviceResolution(videoDevice);
+            }
+        }
+
+        private void GetDeviceResolution(VideoCaptureDevice videoCaptureDevice)
+        {
+            comboBox2.Items.Clear();
+            videoCapabilities = videoCaptureDevice.VideoCapabilities;
+            foreach (VideoCapabilities capabilty in videoCapabilities)
+            {
+                comboBox2.Items.Add($"{capabilty.FrameSize.Width} x {capabilty.FrameSize.Height}");
+            }
+            comboBox2.SelectedIndex = 0;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             TimeStart = DateTime.Now;
             timer3.Start();
             InitChart();
             flag_Start = true;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (videoDevice != null)
+            {
+                if ((videoCapabilities != null) && (videoCapabilities.Length != 0))
+                {
+                    videoDevice.VideoResolution = videoCapabilities[comboBox2.SelectedIndex];
+                    videoSourcePlayer1.VideoSource = videoDevice;
+                    videoSourcePlayer1.Start();
+                    EnableControlStatus(false);
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            EnableControlStatus(true);
+        }
+
+        private void DisConnect()
+        {
+            if (videoSourcePlayer1.VideoSource != null)
+            {
+                videoSourcePlayer1.SignalToStop();
+                videoSourcePlayer1.WaitForStop();
+                videoSourcePlayer1.VideoSource = null;
+            }
+        }
+
+        private void EnableControlStatus(bool status)
+        {
+            comboBox1.Enabled = status;
+            comboBox2.Enabled = status;
+            button3.Enabled = status;
+            button4.Enabled = !status;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -605,6 +685,7 @@ namespace MiniIMU
             flag_Start = false;
             Status.Text = "SQL server is disconnect";
         }
+        
 
         public enum Baud
         {

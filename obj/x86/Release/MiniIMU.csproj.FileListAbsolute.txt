@@ -30,3 +30,15 @@ E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.csproj.CoreCompileInputs.c
 E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.csproj.CopyComplete
 E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.exe
 E:\GitHub\HostComputerForRail\obj\x86\Release\MiniIMU.pdb
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Controls.dll
+E:\GitHub\HostComputerForRail\bin\Release\AForge.dll
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Imaging.dll
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Math.dll
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Video.DirectShow.dll
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Video.dll
+E:\GitHub\HostComputerForRail\bin\Release\AForge.xml
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Controls.xml
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Imaging.xml
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Math.xml
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Video.xml
+E:\GitHub\HostComputerForRail\bin\Release\AForge.Video.DirectShow.xml
