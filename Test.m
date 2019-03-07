@@ -36,13 +36,15 @@ end
 A2 = A2.';
 
 % Integration
-V = Integration(A12,0.020);
+V = Integration(A2,0.020);
 S = Integration(V,0.020);
-
 s = S(length(S),:);
+
 % plot
 x = 1:length(A0(:,1));
-plot(x,A2(:,2),x,V(:,2),x,S(:,2));
+%plot(x,A2(:,2),x,V(:,2),x,S(:,2));
+figure(number);
+plot(x,V(:,3),x,S(:,3));
 grid on;
 %text(0,0,num2str(S(length(S))));
 %end

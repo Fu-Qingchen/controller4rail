@@ -29,7 +29,8 @@ namespace MiniIMU
         double[] Angle0_integration = {0,0}, a1_integration = { 0, 0 }, a2_integration = { 0, 0 };
         double[] v1_integration = { 0, 0 }, v2_integration = { 0, 0 };
         double[] y_integration = { 0, 0 }, z_integration = { 0, 0 };
-        double fixA1 = 0, fixA2 = -0.008, fixAngle0 = 0,e = 0.002;  //这里要改
+        DateTime[] deltaTime = { DateTime.Now, DateTime.Now };
+        double fixA1 = 0.001, fixA2 = 0.997, fixAngle0 = 0,e = 0.008;  //这里要改
         int a_count = 0;
 
         //监控部分
@@ -223,13 +224,15 @@ namespace MiniIMU
             textBox20.Text = Angle[2]+"";
             textBox18.Text = DateTime.Now+"";
             textBox17.Text = TimeElapse + "";
+            textBox1.Text = deltaTime[0] + "";
+            textBox2.Text = deltaTime[1] + "";
             //加速度折线图
             this.chart1.Series[0].ChartType = SeriesChartType.Line;
             this.chart1.Series[1].ChartType = SeriesChartType.Line;
             this.chart1.Series[2].ChartType = SeriesChartType.Line;
-            this.chart1.Series[0].Points.Add(a[0]);
-            this.chart1.Series[1].Points.Add(a[1]);
-            this.chart1.Series[2].Points.Add(a[2]);
+            this.chart1.Series[0].Points.Add(a[0]-0.004);
+            this.chart1.Series[1].Points.Add(a[1]-0.001);
+            this.chart1.Series[2].Points.Add(a[2]-0.997);
             ////速度折线图
             //this.chart2.Series[0].ChartType = SeriesChartType.Line;
             //this.chart2.Series[1].ChartType = SeriesChartType.Line;
@@ -247,10 +250,16 @@ namespace MiniIMU
             if (flag_Start)
             {
                 SQLConnect();
+                deltaTime[0] = deltaTime[1];
+                deltaTime[1] = DateTime.Now;
+
+
                 a1_integration[0] = a1_integration[1];
                 a2_integration[0] = a2_integration[1];
                 a1_integration[1] = a[1];
                 a2_integration[1] = a[2];
+
+                removeG();
                 fixMember();
                 integration();
                 getYl();
@@ -263,6 +272,9 @@ namespace MiniIMU
                 textBox4.Text = Yr + "";
                 textBox5.Text = Zl + "";
                 textBox6.Text = Zr + "";
+
+                textBox1.Text = (deltaTime[0] - TimeStart).TotalMilliseconds/1000 + "";
+                textBox2.Text = (deltaTime[1] - TimeStart).TotalMilliseconds/1000 + "";
             }
         }//【实时输出数据】
 
@@ -667,6 +679,11 @@ namespace MiniIMU
             }
         }
 
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
         private void EnableControlStatus(bool status)
         {
             comboBox1.Enabled = status;
@@ -856,8 +873,9 @@ namespace MiniIMU
             a1_integration[1] = a1_integration[1] - fixA1;
             a2_integration[1] = a2_integration[1] - fixA2;
             Angle0_integration[1] = Angle0_integration[1] - fixAngle0;
-            for (int i = 0; i < 2; i++)
-            {                //TODO:机械振动修正
+            //for (int i = 0; i < 2; i++)
+            //{                //TODO:机械振动修正
+            int i = 1;
                 if ((a1_integration[i] <= e) && (a1_integration[i] > -e))
                 {
                     a1_integration[i] = 0;
@@ -870,19 +888,19 @@ namespace MiniIMU
                 {
                     Angle0_integration[i] = 0;
                 }
-            }
+            //}
         }
 
         private void integration()
         {
 
-            v1_integration[1] = v1_integration[0] + ((a1_integration[1] + a1_integration[0]) / 2) * timer3.Interval/1000;
-            y_integration[1] = y_integration[0] + ((v1_integration[1] + v1_integration[0])/ 2) * timer3.Interval/1000;
+            v1_integration[1] = v1_integration[0] + ((a1_integration[1] + a1_integration[0]) / 2) * (deltaTime[1]-deltaTime[0]).TotalMilliseconds/1000;
+            y_integration[1] = y_integration[0] + ((v1_integration[1] + v1_integration[0])/ 2) * (deltaTime[1] - deltaTime[0]).TotalMilliseconds / 1000;
             v1_integration[0] = v1_integration[1];
             y_integration[0] = y_integration[1];
 
-            v2_integration[1] = v2_integration[0] + ((a2_integration[1] + a2_integration[0]) / 2) * timer3.Interval/1000;
-            z_integration[1] = z_integration[0] + ((v2_integration[1] + v2_integration[0]) / 2 )* timer3.Interval/1000;
+            v2_integration[1] = v2_integration[0] + ((a2_integration[1] + a2_integration[0]) / 2) * (deltaTime[1] - deltaTime[0]).TotalMilliseconds / 1000;
+            z_integration[1] = z_integration[0] + ((v2_integration[1] + v2_integration[0]) / 2 )* (deltaTime[1] - deltaTime[0]).TotalMilliseconds / 1000;
             v2_integration[0] = v2_integration[1];
             z_integration[0] = z_integration[1];
 

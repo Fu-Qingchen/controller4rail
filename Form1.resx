@@ -1759,7 +1759,7 @@
     <value>NoControl</value>
   </data>
   <data name="label19.Location" type="System.Drawing.Point, System.Drawing">
-    <value>328, 255</value>
+    <value>406, 255</value>
   </data>
   <data name="label19.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 0, 4, 0</value>
@@ -1795,7 +1795,7 @@
     <value>5, 6, 5, 6</value>
   </data>
   <data name="textBox6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 34</value>
+    <value>201, 34</value>
   </data>
   <data name="textBox6.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -1822,7 +1822,7 @@
     <value>NoControl</value>
   </data>
   <data name="label18.Location" type="System.Drawing.Point, System.Drawing">
-    <value>328, 214</value>
+    <value>406, 214</value>
   </data>
   <data name="label18.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 0, 4, 0</value>
@@ -1858,7 +1858,7 @@
     <value>5, 6, 5, 6</value>
   </data>
   <data name="textBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 34</value>
+    <value>201, 34</value>
   </data>
   <data name="textBox5.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -1885,7 +1885,7 @@
     <value>NoControl</value>
   </data>
   <data name="label17.Location" type="System.Drawing.Point, System.Drawing">
-    <value>328, 172</value>
+    <value>406, 172</value>
   </data>
   <data name="label17.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 0, 4, 0</value>
@@ -1921,7 +1921,7 @@
     <value>5, 6, 5, 6</value>
   </data>
   <data name="textBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 34</value>
+    <value>201, 34</value>
   </data>
   <data name="textBox4.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -1948,7 +1948,7 @@
     <value>NoControl</value>
   </data>
   <data name="label16.Location" type="System.Drawing.Point, System.Drawing">
-    <value>328, 131</value>
+    <value>406, 131</value>
   </data>
   <data name="label16.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 0, 4, 0</value>
@@ -1984,7 +1984,7 @@
     <value>5, 6, 5, 6</value>
   </data>
   <data name="textBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 34</value>
+    <value>201, 34</value>
   </data>
   <data name="textBox3.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -2011,7 +2011,7 @@
     <value>NoControl</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>328, 90</value>
+    <value>406, 90</value>
   </data>
   <data name="label15.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 0, 4, 0</value>
@@ -2047,7 +2047,7 @@
     <value>5, 6, 5, 6</value>
   </data>
   <data name="textBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 34</value>
+    <value>201, 34</value>
   </data>
   <data name="textBox2.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -2074,7 +2074,7 @@
     <value>NoControl</value>
   </data>
   <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>328, 49</value>
+    <value>406, 49</value>
   </data>
   <data name="label14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 0, 4, 0</value>
@@ -2110,7 +2110,7 @@
     <value>5, 6, 5, 6</value>
   </data>
   <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 34</value>
+    <value>201, 34</value>
   </data>
   <data name="textBox1.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -8832,9 +8832,6 @@
         /jD+/v4w/v7+MP7+/jD+/v4w/v7+MP7+/jD+/v4w/v7+MP7+/jD+/v4w/v7+MAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
