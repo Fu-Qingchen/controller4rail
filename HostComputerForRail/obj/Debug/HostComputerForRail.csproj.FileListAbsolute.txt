@@ -1,0 +1,9 @@
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\HostComputerForRail.exe
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\HostComputerForRail.pdb
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.csprojAssemblyReference.cache
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.Properties.Resources.resources
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.csproj.GenerateResource.cache
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.csproj.CoreCompileInputs.cache
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.exe
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.pdb
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.Form1.resources
