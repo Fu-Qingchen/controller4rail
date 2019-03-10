@@ -7,3 +7,16 @@ E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.
 E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.exe
 E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.pdb
 E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.Form1.resources
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Controls.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Imaging.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Math.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Video.DirectShow.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Video.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.xml
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Controls.xml
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Imaging.xml
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Math.xml
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Video.xml
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Video.DirectShow.xml
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.csproj.CopyComplete
