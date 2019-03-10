@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.statusStrip_bottom = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel_State = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_Camera = new System.Windows.Forms.ToolStripStatusLabel();
@@ -59,8 +59,20 @@
             this.pictureBox_Close = new System.Windows.Forms.PictureBox();
             this.pictureBox_Min = new System.Windows.Forms.PictureBox();
             this.panel_OriginData = new System.Windows.Forms.Panel();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.groupBox_MonitorCamera = new System.Windows.Forms.GroupBox();
+            this.button_MonitorCamera = new System.Windows.Forms.Button();
+            this.comboBox_MonitorCamera = new System.Windows.Forms.ComboBox();
+            this.videoSourcePlayer_MonitorCamera = new AForge.Controls.VideoSourcePlayer();
+            this.label51 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label43 = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
@@ -125,20 +137,9 @@
             this.label_Inclinometer1_Az = new System.Windows.Forms.Label();
             this.label_Inclinometer1_Ay = new System.Windows.Forms.Label();
             this.label_Inclinometer1_Ax = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
-            this.label40 = new System.Windows.Forms.Label();
-            this.label41 = new System.Windows.Forms.Label();
-            this.label42 = new System.Windows.Forms.Label();
             this.pictureBox_Start = new System.Windows.Forms.PictureBox();
             this.pictureBox_Pause = new System.Windows.Forms.PictureBox();
             this.pictureBox_End = new System.Windows.Forms.PictureBox();
-            this.videoSourcePlayer1 = new AForge.Controls.VideoSourcePlayer();
-            this.comboBox_Camera = new System.Windows.Forms.ComboBox();
-            this.label51 = new System.Windows.Forms.Label();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.statusStrip_bottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Logo)).BeginInit();
             this.statusStrip_Left.SuspendLayout();
@@ -146,17 +147,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Min)).BeginInit();
             this.panel_OriginData.SuspendLayout();
-            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox_MonitorCamera.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox_Inclinometer2.SuspendLayout();
             this.groupBox_Inclinometer1.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Start)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Pause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_End)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip_bottom
@@ -420,7 +421,7 @@
             // 
             this.panel_OriginData.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
             this.panel_OriginData.Controls.Add(this.groupBox5);
-            this.panel_OriginData.Controls.Add(this.groupBox4);
+            this.panel_OriginData.Controls.Add(this.groupBox_MonitorCamera);
             this.panel_OriginData.Controls.Add(this.groupBox3);
             this.panel_OriginData.Controls.Add(this.groupBox2);
             this.panel_OriginData.Controls.Add(this.groupBox1);
@@ -431,19 +432,142 @@
             this.panel_OriginData.Size = new System.Drawing.Size(1842, 976);
             this.panel_OriginData.TabIndex = 10;
             // 
-            // groupBox4
+            // groupBox5
             // 
-            this.groupBox4.Controls.Add(this.comboBox_Camera);
-            this.groupBox4.Controls.Add(this.videoSourcePlayer1);
-            this.groupBox4.Controls.Add(this.label51);
-            this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.ForeColor = System.Drawing.Color.White;
-            this.groupBox4.Location = new System.Drawing.Point(926, 491);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(891, 469);
-            this.groupBox4.TabIndex = 20;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "实时监控";
+            this.groupBox5.Controls.Add(this.label37);
+            this.groupBox5.Controls.Add(this.label38);
+            this.groupBox5.Controls.Add(this.label39);
+            this.groupBox5.Controls.Add(this.label40);
+            this.groupBox5.Controls.Add(this.label41);
+            this.groupBox5.Controls.Add(this.label42);
+            this.groupBox5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox5.ForeColor = System.Drawing.Color.White;
+            this.groupBox5.Location = new System.Drawing.Point(481, 770);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(382, 190);
+            this.groupBox5.TabIndex = 20;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "轨距尺信息";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Location = new System.Drawing.Point(39, 142);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(105, 23);
+            this.label37.TabIndex = 11;
+            this.label37.Text = "Z轴加速度：";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label38.Location = new System.Drawing.Point(39, 96);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(104, 23);
+            this.label38.TabIndex = 10;
+            this.label38.Text = "Y轴加速度：";
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label39.Location = new System.Drawing.Point(39, 50);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(105, 23);
+            this.label39.TabIndex = 9;
+            this.label39.Text = "X轴加速度：";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label40.Location = new System.Drawing.Point(150, 142);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(112, 23);
+            this.label40.TabIndex = 2;
+            this.label40.Text = "倾角仪未连接";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label41.Location = new System.Drawing.Point(150, 96);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(112, 23);
+            this.label41.TabIndex = 1;
+            this.label41.Text = "倾角仪未连接";
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.Location = new System.Drawing.Point(150, 50);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(112, 23);
+            this.label42.TabIndex = 0;
+            this.label42.Text = "倾角仪未连接";
+            // 
+            // groupBox_MonitorCamera
+            // 
+            this.groupBox_MonitorCamera.Controls.Add(this.button_MonitorCamera);
+            this.groupBox_MonitorCamera.Controls.Add(this.comboBox_MonitorCamera);
+            this.groupBox_MonitorCamera.Controls.Add(this.videoSourcePlayer_MonitorCamera);
+            this.groupBox_MonitorCamera.Controls.Add(this.label51);
+            this.groupBox_MonitorCamera.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox_MonitorCamera.ForeColor = System.Drawing.Color.White;
+            this.groupBox_MonitorCamera.Location = new System.Drawing.Point(926, 491);
+            this.groupBox_MonitorCamera.Name = "groupBox_MonitorCamera";
+            this.groupBox_MonitorCamera.Size = new System.Drawing.Size(891, 469);
+            this.groupBox_MonitorCamera.TabIndex = 20;
+            this.groupBox_MonitorCamera.TabStop = false;
+            this.groupBox_MonitorCamera.Text = "实时监控";
+            // 
+            // button_MonitorCamera
+            // 
+            this.button_MonitorCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
+            this.button_MonitorCamera.Location = new System.Drawing.Point(19, 279);
+            this.button_MonitorCamera.Name = "button_MonitorCamera";
+            this.button_MonitorCamera.Size = new System.Drawing.Size(90, 36);
+            this.button_MonitorCamera.TabIndex = 23;
+            this.button_MonitorCamera.Text = "连接";
+            this.button_MonitorCamera.UseVisualStyleBackColor = false;
+            this.button_MonitorCamera.Click += new System.EventHandler(this.button_MonitorCamera_Click);
+            // 
+            // comboBox_MonitorCamera
+            // 
+            this.comboBox_MonitorCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.comboBox_MonitorCamera.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.comboBox_MonitorCamera.ForeColor = System.Drawing.Color.White;
+            this.comboBox_MonitorCamera.FormattingEnabled = true;
+            this.comboBox_MonitorCamera.Location = new System.Drawing.Point(19, 142);
+            this.comboBox_MonitorCamera.Name = "comboBox_MonitorCamera";
+            this.comboBox_MonitorCamera.Size = new System.Drawing.Size(90, 36);
+            this.comboBox_MonitorCamera.TabIndex = 22;
+            this.comboBox_MonitorCamera.SelectedIndexChanged += new System.EventHandler(this.comboBox_MonitorCamera_SelectedIndexChanged);
+            // 
+            // videoSourcePlayer_MonitorCamera
+            // 
+            this.videoSourcePlayer_MonitorCamera.BorderColor = System.Drawing.Color.White;
+            this.videoSourcePlayer_MonitorCamera.Location = new System.Drawing.Point(122, 34);
+            this.videoSourcePlayer_MonitorCamera.Name = "videoSourcePlayer_MonitorCamera";
+            this.videoSourcePlayer_MonitorCamera.Size = new System.Drawing.Size(763, 429);
+            this.videoSourcePlayer_MonitorCamera.TabIndex = 0;
+            this.videoSourcePlayer_MonitorCamera.Text = "videoSourcePlayer1";
+            this.videoSourcePlayer_MonitorCamera.VideoSource = null;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F);
+            this.label51.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label51.Location = new System.Drawing.Point(30, 93);
+            this.label51.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(64, 24);
+            this.label51.TabIndex = 21;
+            this.label51.Text = "摄像机";
             // 
             // groupBox3
             // 
@@ -456,6 +580,24 @@
             this.groupBox3.TabIndex = 19;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "状态曲线";
+            // 
+            // chart1
+            // 
+            this.chart1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.chart1.BorderSkin.PageColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
+            this.chart1.Location = new System.Drawing.Point(6, 33);
+            this.chart1.Name = "chart1";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(879, 430);
+            this.chart1.TabIndex = 21;
+            this.chart1.Text = "chart1";
             // 
             // groupBox2
             // 
@@ -1161,83 +1303,6 @@
             this.label_Inclinometer1_Ax.TabIndex = 0;
             this.label_Inclinometer1_Ax.Text = "倾角仪未连接";
             // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.label37);
-            this.groupBox5.Controls.Add(this.label38);
-            this.groupBox5.Controls.Add(this.label39);
-            this.groupBox5.Controls.Add(this.label40);
-            this.groupBox5.Controls.Add(this.label41);
-            this.groupBox5.Controls.Add(this.label42);
-            this.groupBox5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox5.ForeColor = System.Drawing.Color.White;
-            this.groupBox5.Location = new System.Drawing.Point(481, 770);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(382, 190);
-            this.groupBox5.TabIndex = 20;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "轨距尺信息";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label37.Location = new System.Drawing.Point(39, 142);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(105, 23);
-            this.label37.TabIndex = 11;
-            this.label37.Text = "Z轴加速度：";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label38.Location = new System.Drawing.Point(39, 96);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(104, 23);
-            this.label38.TabIndex = 10;
-            this.label38.Text = "Y轴加速度：";
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label39.Location = new System.Drawing.Point(39, 50);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(105, 23);
-            this.label39.TabIndex = 9;
-            this.label39.Text = "X轴加速度：";
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.Location = new System.Drawing.Point(150, 142);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(112, 23);
-            this.label40.TabIndex = 2;
-            this.label40.Text = "倾角仪未连接";
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label41.Location = new System.Drawing.Point(150, 96);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(112, 23);
-            this.label41.TabIndex = 1;
-            this.label41.Text = "倾角仪未连接";
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.Location = new System.Drawing.Point(150, 50);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(112, 23);
-            this.label42.TabIndex = 0;
-            this.label42.Text = "倾角仪未连接";
-            // 
             // pictureBox_Start
             // 
             this.pictureBox_Start.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_Start.Image")));
@@ -1268,56 +1333,6 @@
             this.pictureBox_End.TabIndex = 13;
             this.pictureBox_End.TabStop = false;
             // 
-            // videoSourcePlayer1
-            // 
-            this.videoSourcePlayer1.Location = new System.Drawing.Point(122, 34);
-            this.videoSourcePlayer1.Name = "videoSourcePlayer1";
-            this.videoSourcePlayer1.Size = new System.Drawing.Size(763, 429);
-            this.videoSourcePlayer1.TabIndex = 0;
-            this.videoSourcePlayer1.Text = "videoSourcePlayer1";
-            this.videoSourcePlayer1.VideoSource = null;
-            // 
-            // comboBox_Camera
-            // 
-            this.comboBox_Camera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.comboBox_Camera.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.comboBox_Camera.ForeColor = System.Drawing.Color.White;
-            this.comboBox_Camera.FormattingEnabled = true;
-            this.comboBox_Camera.Location = new System.Drawing.Point(34, 221);
-            this.comboBox_Camera.Name = "comboBox_Camera";
-            this.comboBox_Camera.Size = new System.Drawing.Size(60, 36);
-            this.comboBox_Camera.TabIndex = 22;
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F);
-            this.label51.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label51.Location = new System.Drawing.Point(30, 164);
-            this.label51.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(64, 24);
-            this.label51.TabIndex = 21;
-            this.label51.Text = "摄像机";
-            // 
-            // chart1
-            // 
-            this.chart1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.chart1.BorderSkin.PageColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(6, 33);
-            this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(879, 430);
-            this.chart1.TabIndex = 21;
-            this.chart1.Text = "chart1";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 15F);
@@ -1343,6 +1358,7 @@
             this.Name = "Form1";
             this.Text = "基于子母机协同的高效铁轨检修机控制中心";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip_bottom.ResumeLayout(false);
             this.statusStrip_bottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Logo)).EndInit();
@@ -1353,9 +1369,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Min)).EndInit();
             this.panel_OriginData.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.groupBox_MonitorCamera.ResumeLayout(false);
+            this.groupBox_MonitorCamera.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -1364,12 +1383,9 @@
             this.groupBox_Inclinometer2.PerformLayout();
             this.groupBox_Inclinometer1.ResumeLayout(false);
             this.groupBox_Inclinometer1.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Start)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Pause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_End)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1413,7 +1429,7 @@
         private System.Windows.Forms.Label label_Inclinometer1_THETAz;
         private System.Windows.Forms.Label label_Inclinometer1_THETAy;
         private System.Windows.Forms.Label label_Inclinometer1_THETAx;
-        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox_MonitorCamera;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label43;
@@ -1479,10 +1495,11 @@
         private System.Windows.Forms.PictureBox pictureBox_Start;
         private System.Windows.Forms.PictureBox pictureBox_Pause;
         private System.Windows.Forms.PictureBox pictureBox_End;
-        private System.Windows.Forms.ComboBox comboBox_Camera;
-        private AForge.Controls.VideoSourcePlayer videoSourcePlayer1;
+        private System.Windows.Forms.ComboBox comboBox_MonitorCamera;
+        private AForge.Controls.VideoSourcePlayer videoSourcePlayer_MonitorCamera;
         private System.Windows.Forms.Label label51;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button button_MonitorCamera;
     }
 }
 
