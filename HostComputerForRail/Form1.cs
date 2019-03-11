@@ -6,15 +6,16 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO.Ports;
 using AForge.Video.DirectShow;
+using System.Threading;
 
 namespace HostComputerForRail
 {
     public partial class Form1 : Form
     {
-        private bool bool_haveCamera;    //判断是否有可用的摄像头
-        private FilterInfoCollection VideoInputDeviceCollection;    //调出所有可用设备
-        private VideoCaptureDevice VideoCaptureDevice;  //
+        private DateTime TimeStart = DateTime.Now;
+        bool bool_start = false;
 
         public Form1()
         {
@@ -23,8 +24,13 @@ namespace HostComputerForRail
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //识别电脑上的监控摄像头
+            //实时监控部分
             bool_haveCamera = comboBox_MonitorCamera_Load();
+
+            //倾角仪传输部分
+            comboBox_Inclinometer_Load();
+            SerialPort_Inclinometer1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort_DataReceived1);
+            SerialPort_Inclinometer2.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort_DataReceived2);
 
             //底栏状态调整
             if (bool_haveCamera)
@@ -37,9 +43,273 @@ namespace HostComputerForRail
             }
         }
 
+        //串口重置
+        private void pictureBox_Refresh_Click(object sender, EventArgs e)
+        {
+            bool_Inclinometer1 = false;
+            bool_Inclinometer2 = false;
+            bool_haveCamera = false;
+            comboBox_Inclinometer1.SelectedIndex = -1;
+            comboBox_Inclinometer2.SelectedIndex = -1;
+            comboBox_MonitorCamera.SelectedIndex = -1;
+        }
+
+        private void pictureBox_Start_Click(object sender, EventArgs e)
+        {
+            bool_start = true;
+            //timer_Main.Start();
+        }
+
+        private void pictureBox_End_Click(object sender, EventArgs e)
+        {
+            bool_start = false;
+            timer_Main.Stop();
+        }
+
+        private void timer_Main_Tick(object sender, EventArgs e)
+        {
+            if (bool_start)
+            {
+                //TODO: 刷新数据
+                label_Inclinometer1_Ax.Text = a[0,0] + "";
+                label_Inclinometer1_Ay.Text = a[0,1] + "";
+                label_Inclinometer1_Az.Text = a[0,2] + "";
+                label_Inclinometer1_THETAx.Text = Angle[0,0] + "";
+                label_Inclinometer1_THETAy.Text = Angle[0,1] + "";
+                label_Inclinometer1_THETAz.Text = Angle[0,2] + "";
+                label_Inclinometer2_Ax.Text = a[1, 0] + "";
+                label_Inclinometer2_Ay.Text = a[1, 1] + "";
+                label_Inclinometer2_Az.Text = a[1, 2] + "";
+                label_Inclinometer2_THETAx.Text = Angle[1, 0] + "";
+                label_Inclinometer2_THETAy.Text = Angle[1, 1] + "";
+                label_Inclinometer2_THETAz.Text = Angle[1, 2] + "";
+            }
+        }
+
+        /*
+         * —————————————————————————————————————————倾角仪传输部分——————————————————————————————————————————
+         */
+        private bool bool_Inclinometer1 = false, bool_Inclinometer2 = false;
+        string[] serialPortName;
+        SerialPort SerialPort_Inclinometer1 = new SerialPort();
+        SerialPort SerialPort_Inclinometer2 = new SerialPort();
+        double[,] a = new double[2,3], Angle = new double[2,3];
+        int serialPortNumber;
+
+        //查询串口并加载
+        private void comboBox_Inclinometer_Load()
+        {
+            serialPortName = SerialPort.GetPortNames();
+            if(serialPortName == null)
+            {
+                toolStripStatusLabel_Inclinometer.Text = "无串口连接";
+            }
+            else
+            {
+                foreach(string name in serialPortName)
+                {
+                    comboBox_Inclinometer1.Items.Add(name);
+                    comboBox_Inclinometer1.SelectedIndex = -1;
+                    comboBox_Inclinometer2.Items.Add(name);
+                    comboBox_Inclinometer2.SelectedIndex = -1;
+                }
+                toolStripStatusLabel_Inclinometer.Text = "请选择倾角仪串口";
+            }
+            SerialPort_Inclinometer1.BaudRate = 115200;
+            SerialPort_Inclinometer2.BaudRate = 115200;
+        }
+
+        //关闭串口，释放资源
+        private void serialPort_Close(SerialPort serialPort)
+        {
+            if (serialPort.IsOpen == true)
+            {
+                serialPort.Dispose();
+                serialPort.Close();
+            }
+        }
+
+        private void comboBox_Inclinometer1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox_Inclinometer1.SelectedIndex >= 0)
+            {
+                SerialPort_Inclinometer1.PortName = serialPortName[comboBox_Inclinometer1.SelectedIndex];
+            }
+
+            bool_Inclinometer1 = true;
+            if (bool_Inclinometer2 == true)
+            {
+                toolStripStatusLabel_Inclinometer.Text = "倾角仪已连接";
+            }
+
+            serialPort_Close(SerialPort_Inclinometer1);
+            SerialPort_Inclinometer1.Open();
+
+            timer_Main.Start();
+        }
+
+        private void comboBox_Inclinometer2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox_Inclinometer2.SelectedIndex >= 0)
+            {
+                SerialPort_Inclinometer2.PortName = serialPortName[comboBox_Inclinometer2.SelectedIndex];
+            }
+
+            bool_Inclinometer2 = true;
+            if (bool_Inclinometer1 == true)
+            {
+                toolStripStatusLabel_Inclinometer.Text = "倾角仪已连接";
+            }
+
+            serialPort_Close(SerialPort_Inclinometer2);
+            SerialPort_Inclinometer2.Open();
+            timer_Main.Start();
+        }
+
+        //以下获取串口数据部分, 改编于传感器厂商示例代码
+        delegate void UpdateData1(byte[] byteData);//声明一个委托
+        delegate void UpdateData2(byte[] byteData);//声明一个委托
+        byte[] RxBuffer1 = new byte[1000];
+        byte[] RxBuffer2 = new byte[1000];
+        UInt16 usRxLength1 = 0;
+        UInt16 usRxLength2 = 0;
+        private double[] LastTime1 = new double[10];
+        private double[] LastTime2 = new double[10];
+
+        //接收数据
+        private void SerialPort_DataReceived1(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            byte[] byteTemp = new byte[1000];
+            UInt16 usLength = 0;
+            usLength = (UInt16)SerialPort_Inclinometer1.Read(RxBuffer1, usRxLength1, 700);
+            usRxLength1 += usLength;
+            while (usRxLength1 >= 11)
+            {
+                UpdateData1 Update = new UpdateData1(DecodeData1);
+                RxBuffer1.CopyTo(byteTemp, 0);
+                if (!((byteTemp[0] == 0x55) & ((byteTemp[1] & 0x50) == 0x50)))
+                {
+                    for (int i = 1; i < usRxLength1; i++) RxBuffer1[i - 1] = RxBuffer1[i];
+                    usRxLength1--;
+                    continue;
+                }
+                if (((byteTemp[0] + byteTemp[1] + byteTemp[2] + byteTemp[3] + byteTemp[4] + byteTemp[5] + byteTemp[6] + byteTemp[7] + byteTemp[8] + byteTemp[9]) & 0xff) == byteTemp[10])
+                    this.Invoke(Update, byteTemp);
+                    for (int i = 11; i < usRxLength1; i++) RxBuffer1[i - 11] = RxBuffer1[i];
+                    usRxLength1 -= 11;
+                }
+            Thread.Sleep(10);
+        }
+        private void SerialPort_DataReceived2(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            byte[] byteTemp = new byte[1000];
+            UInt16 usLength = 0;
+            usLength = (UInt16)SerialPort_Inclinometer2.Read(RxBuffer2, usRxLength2, 700);
+            usRxLength2 += usLength;
+            while (usRxLength2 >= 11)
+            {
+                UpdateData2 Update = new UpdateData2(DecodeData2);
+                RxBuffer2.CopyTo(byteTemp, 0);
+                if (!((byteTemp[0] == 0x55) & ((byteTemp[1] & 0x50) == 0x50)))
+                {
+                    for (int i = 1; i < usRxLength2; i++) RxBuffer2[i - 1] = RxBuffer2[i];
+                    usRxLength2--;
+                    continue;
+                }
+                if (((byteTemp[0] + byteTemp[1] + byteTemp[2] + byteTemp[3] + byteTemp[4] + byteTemp[5] + byteTemp[6] + byteTemp[7] + byteTemp[8] + byteTemp[9]) & 0xff) == byteTemp[10])
+                    this.Invoke(Update, byteTemp);
+                for (int i = 11; i < usRxLength2; i++) RxBuffer2[i - 11] = RxBuffer2[i];
+                usRxLength2 -= 11;
+            }
+            Thread.Sleep(10);
+        }
+
+        //解码数据
+        private void DecodeData1(byte[] byteTemp)
+        {
+            serialPortNumber = 0;
+            double[] Data = new double[4];
+            double TimeElapse = (DateTime.Now - TimeStart).TotalMilliseconds / 1000;
+
+            Data[0] = BitConverter.ToInt16(byteTemp, 2);
+            Data[1] = BitConverter.ToInt16(byteTemp, 4);
+            Data[2] = BitConverter.ToInt16(byteTemp, 6);
+            Data[3] = BitConverter.ToInt16(byteTemp, 8);
+
+            switch (byteTemp[1])
+            {
+                case 0x51:  //加速度输出
+                    Data[0] = Data[0] / 32768.0 * 16;
+                    Data[1] = Data[1] / 32768.0 * 16;
+                    Data[2] = Data[2] / 32768.0 * 16;
+
+                    a[serialPortNumber,0] = Data[0];
+                    a[serialPortNumber,1] = Data[1];
+                    a[serialPortNumber,2] = Data[2];
+                    if ((TimeElapse - LastTime1[1]) < 0.1) return;
+                    LastTime1[1] = TimeElapse;
+                    break;
+                case 0x53:  //角度输出
+                    Data[0] = Data[0] / 32768.0 * 180;
+                    Data[1] = Data[1] / 32768.0 * 180;
+                    Data[2] = Data[2] / 32768.0 * 180;
+                    Angle[serialPortNumber,0] = Data[0];
+                    Angle[serialPortNumber,1] = Data[1];
+                    Angle[serialPortNumber,2] = Data[2];
+                    if ((TimeElapse - LastTime1[3]) < 0.1) return;
+                    LastTime1[3] = TimeElapse;
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void DecodeData2(byte[] byteTemp)
+        {
+            serialPortNumber = 1;
+            double[] Data = new double[4];
+            double TimeElapse = (DateTime.Now - TimeStart).TotalMilliseconds / 1000;
+
+            Data[0] = BitConverter.ToInt16(byteTemp, 2);
+            Data[1] = BitConverter.ToInt16(byteTemp, 4);
+            Data[2] = BitConverter.ToInt16(byteTemp, 6);
+            Data[3] = BitConverter.ToInt16(byteTemp, 8);
+
+            switch (byteTemp[1])
+            {
+                case 0x51:  //加速度输出
+                    Data[0] = Data[0] / 32768.0 * 16;
+                    Data[1] = Data[1] / 32768.0 * 16;
+                    Data[2] = Data[2] / 32768.0 * 16;
+
+                    a[serialPortNumber,0] = Data[0];
+                    a[serialPortNumber,1] = Data[1];
+                    a[serialPortNumber,2] = Data[2];
+                    if ((TimeElapse - LastTime2[1]) < 0.1) return;
+                    LastTime2[1] = TimeElapse;
+                    break;
+                case 0x53:  //角度输出
+                    Data[0] = Data[0] / 32768.0 * 180;
+                    Data[1] = Data[1] / 32768.0 * 180;
+                    Data[2] = Data[2] / 32768.0 * 180;
+                    Angle[serialPortNumber,0] = Data[0];
+                    Angle[serialPortNumber,1] = Data[1];
+                    Angle[serialPortNumber,2] = Data[2];
+                    if ((TimeElapse - LastTime2[3]) < 0.1) return;
+                    LastTime2[3] = TimeElapse;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         /*
          * ————————————————————————————————————————————实时监控部分————————————————————————————————————————————
          */
+
+        private bool bool_haveCamera;    //判断是否有可用的摄像头
+        private FilterInfoCollection VideoInputDeviceCollection;    //调出所有可用设备
+        private VideoCaptureDevice VideoCaptureDevice;  //视频源
+
         //获取所有摄像机, 并把它加载在 comboBox 控件上 
         public bool comboBox_MonitorCamera_Load()
         {
@@ -47,7 +317,7 @@ namespace HostComputerForRail
             foreach (FilterInfo VideoInputDevice in VideoInputDeviceCollection)
             {
                 comboBox_MonitorCamera.Items.Add(VideoInputDevice.Name);
-                comboBox_MonitorCamera.SelectedIndex = 0;
+                comboBox_MonitorCamera.SelectedIndex = -1;
             }
             if (VideoInputDeviceCollection.Count == 0)
             {
@@ -55,16 +325,13 @@ namespace HostComputerForRail
             }
             else
             {
-                //获取选择的摄像机
-                VideoCaptureDevice = new VideoCaptureDevice
-                    (VideoInputDeviceCollection[comboBox_MonitorCamera.SelectedIndex].MonikerString);
                 return true;
             }
         }
 
         private void comboBox_MonitorCamera_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (VideoInputDeviceCollection.Count != 0)
+            if (VideoInputDeviceCollection.Count != 0 && comboBox_MonitorCamera.SelectedIndex >= 0)
             {
                 VideoCaptureDevice = new VideoCaptureDevice
                     (VideoInputDeviceCollection[comboBox_MonitorCamera.SelectedIndex].MonikerString);

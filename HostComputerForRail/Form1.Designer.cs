@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.statusStrip_bottom = new System.Windows.Forms.StatusStrip();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            this.statusStrip_Bottom = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel_State = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_Camera = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_Inclinometer = new System.Windows.Forms.ToolStripStatusLabel();
@@ -48,7 +49,7 @@
             this.toolStripStatusLabel7 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusStrip_Line = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel8 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_ControlCenter = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel12 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -74,6 +75,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
@@ -100,18 +102,14 @@
             this.label35 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
             this.groupBox_Inclinometer2 = new System.Windows.Forms.GroupBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
+            this.comboBox_Inclinometer2 = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.label_Inclinometer2_Wz = new System.Windows.Forms.Label();
-            this.label_Inclinometer2_Wy = new System.Windows.Forms.Label();
-            this.label_Inclinometer2_Wx = new System.Windows.Forms.Label();
             this.label_Inclinometer2_THETAz = new System.Windows.Forms.Label();
             this.label_Inclinometer2_THETAy = new System.Windows.Forms.Label();
             this.label_Inclinometer2_THETAx = new System.Windows.Forms.Label();
@@ -119,18 +117,14 @@
             this.label_Inclinometer2_Ay = new System.Windows.Forms.Label();
             this.label_Inclinometer2_Ax = new System.Windows.Forms.Label();
             this.groupBox_Inclinometer1 = new System.Windows.Forms.GroupBox();
+            this.comboBox_Inclinometer1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label_Inclinometer1_Wz = new System.Windows.Forms.Label();
-            this.label_Inclinometer1_Wy = new System.Windows.Forms.Label();
-            this.label_Inclinometer1_Wx = new System.Windows.Forms.Label();
             this.label_Inclinometer1_THETAz = new System.Windows.Forms.Label();
             this.label_Inclinometer1_THETAy = new System.Windows.Forms.Label();
             this.label_Inclinometer1_THETAx = new System.Windows.Forms.Label();
@@ -140,10 +134,12 @@
             this.pictureBox_Start = new System.Windows.Forms.PictureBox();
             this.pictureBox_Pause = new System.Windows.Forms.PictureBox();
             this.pictureBox_End = new System.Windows.Forms.PictureBox();
-            this.statusStrip_bottom.SuspendLayout();
+            this.pictureBox_Refresh = new System.Windows.Forms.PictureBox();
+            this.timer_Main = new System.Windows.Forms.Timer(this.components);
+            this.statusStrip_Bottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Logo)).BeginInit();
             this.statusStrip_Left.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.statusStrip_Line.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Min)).BeginInit();
             this.panel_OriginData.SuspendLayout();
@@ -158,24 +154,25 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Start)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Pause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_End)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Refresh)).BeginInit();
             this.SuspendLayout();
             // 
-            // statusStrip_bottom
+            // statusStrip_Bottom
             // 
-            this.statusStrip_bottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(202)))), ((int)(((byte)(81)))), ((int)(((byte)(0)))));
-            this.statusStrip_bottom.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip_bottom.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStrip_Bottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(202)))), ((int)(((byte)(81)))), ((int)(((byte)(0)))));
+            this.statusStrip_Bottom.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip_Bottom.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel_State,
             this.toolStripStatusLabel_Camera,
             this.toolStripStatusLabel_Inclinometer,
             this.toolStripStatusLabel_MotionDetector,
             this.toolStripStatusLabel_SQL});
-            this.statusStrip_bottom.Location = new System.Drawing.Point(0, 1053);
-            this.statusStrip_bottom.Name = "statusStrip_bottom";
-            this.statusStrip_bottom.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.statusStrip_bottom.Size = new System.Drawing.Size(1924, 25);
-            this.statusStrip_bottom.TabIndex = 3;
-            this.statusStrip_bottom.Text = "准备";
+            this.statusStrip_Bottom.Location = new System.Drawing.Point(0, 1053);
+            this.statusStrip_Bottom.Name = "statusStrip_Bottom";
+            this.statusStrip_Bottom.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.statusStrip_Bottom.Size = new System.Drawing.Size(1924, 25);
+            this.statusStrip_Bottom.TabIndex = 3;
+            this.statusStrip_Bottom.Text = "准备";
             // 
             // toolStripStatusLabel_State
             // 
@@ -315,12 +312,12 @@
             this.toolStripStatusLabel5.TextDirection = System.Windows.Forms.ToolStripTextDirection.Vertical90;
             this.toolStripStatusLabel5.Click += new System.EventHandler(this.toolStripStatusLabel5_Click);
             // 
-            // statusStrip1
+            // statusStrip_Line
             // 
-            this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
-            this.statusStrip1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStrip_Line.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
+            this.statusStrip_Line.Dock = System.Windows.Forms.DockStyle.Left;
+            this.statusStrip_Line.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip_Line.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel8,
             this.toolStripStatusLabel_ControlCenter,
             this.toolStripStatusLabel12,
@@ -328,11 +325,11 @@
             this.toolStripStatusLabel_OriginData,
             this.toolStripStatusLabel9,
             this.toolStripStatusLabel_DataSolve});
-            this.statusStrip1.Location = new System.Drawing.Point(22, 0);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(22, 1053);
-            this.statusStrip1.TabIndex = 7;
-            this.statusStrip1.Text = "statusStrip2";
+            this.statusStrip_Line.Location = new System.Drawing.Point(22, 0);
+            this.statusStrip_Line.Name = "statusStrip_Line";
+            this.statusStrip_Line.Size = new System.Drawing.Size(22, 1053);
+            this.statusStrip_Line.TabIndex = 7;
+            this.statusStrip_Line.Text = "statusStrip2";
             // 
             // toolStripStatusLabel8
             // 
@@ -585,22 +582,23 @@
             // 
             this.chart1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
             this.chart1.BorderSkin.PageColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(6, 33);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(879, 430);
             this.chart1.TabIndex = 21;
             this.chart1.Text = "chart1";
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.comboBox1);
             this.groupBox2.Controls.Add(this.label43);
             this.groupBox2.Controls.Add(this.label44);
             this.groupBox2.Controls.Add(this.label45);
@@ -616,15 +614,26 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "地理位置信息";
             // 
+            // comboBox1
+            // 
+            this.comboBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.comboBox1.ForeColor = System.Drawing.Color.White;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(43, 180);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(90, 36);
+            this.comboBox1.TabIndex = 24;
+            // 
             // label43
             // 
             this.label43.AutoSize = true;
             this.label43.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label43.Location = new System.Drawing.Point(39, 142);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(105, 23);
+            this.label43.Size = new System.Drawing.Size(44, 23);
             this.label43.TabIndex = 11;
-            this.label43.Text = "Z轴加速度：";
+            this.label43.Text = "串口";
             // 
             // label44
             // 
@@ -887,18 +896,14 @@
             // 
             // groupBox_Inclinometer2
             // 
-            this.groupBox_Inclinometer2.Controls.Add(this.label10);
-            this.groupBox_Inclinometer2.Controls.Add(this.label11);
-            this.groupBox_Inclinometer2.Controls.Add(this.label12);
+            this.groupBox_Inclinometer2.Controls.Add(this.comboBox_Inclinometer2);
+            this.groupBox_Inclinometer2.Controls.Add(this.label2);
             this.groupBox_Inclinometer2.Controls.Add(this.label13);
             this.groupBox_Inclinometer2.Controls.Add(this.label14);
             this.groupBox_Inclinometer2.Controls.Add(this.label15);
             this.groupBox_Inclinometer2.Controls.Add(this.label16);
             this.groupBox_Inclinometer2.Controls.Add(this.label17);
             this.groupBox_Inclinometer2.Controls.Add(this.label18);
-            this.groupBox_Inclinometer2.Controls.Add(this.label_Inclinometer2_Wz);
-            this.groupBox_Inclinometer2.Controls.Add(this.label_Inclinometer2_Wy);
-            this.groupBox_Inclinometer2.Controls.Add(this.label_Inclinometer2_Wx);
             this.groupBox_Inclinometer2.Controls.Add(this.label_Inclinometer2_THETAz);
             this.groupBox_Inclinometer2.Controls.Add(this.label_Inclinometer2_THETAy);
             this.groupBox_Inclinometer2.Controls.Add(this.label_Inclinometer2_THETAx);
@@ -914,41 +919,33 @@
             this.groupBox_Inclinometer2.TabStop = false;
             this.groupBox_Inclinometer2.Text = "倾角仪2";
             // 
-            // label10
+            // comboBox_Inclinometer2
             // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(39, 418);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(105, 23);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Z轴角速度：";
+            this.comboBox_Inclinometer2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.comboBox_Inclinometer2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.comboBox_Inclinometer2.ForeColor = System.Drawing.Color.White;
+            this.comboBox_Inclinometer2.FormattingEnabled = true;
+            this.comboBox_Inclinometer2.Location = new System.Drawing.Point(154, 56);
+            this.comboBox_Inclinometer2.Name = "comboBox_Inclinometer2";
+            this.comboBox_Inclinometer2.Size = new System.Drawing.Size(171, 36);
+            this.comboBox_Inclinometer2.TabIndex = 26;
+            this.comboBox_Inclinometer2.SelectedIndexChanged += new System.EventHandler(this.comboBox_Inclinometer2_SelectedIndexChanged);
             // 
-            // label11
+            // label2
             // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(39, 372);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(104, 23);
-            this.label11.TabIndex = 16;
-            this.label11.Text = "Y轴角速度：";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(39, 326);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(105, 23);
-            this.label12.TabIndex = 15;
-            this.label12.Text = "X轴角速度：";
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(39, 64);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 23);
+            this.label2.TabIndex = 25;
+            this.label2.Text = "串口号：";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(39, 280);
+            this.label13.Location = new System.Drawing.Point(38, 354);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(88, 23);
             this.label13.TabIndex = 14;
@@ -958,7 +955,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(39, 234);
+            this.label14.Location = new System.Drawing.Point(38, 308);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(87, 23);
             this.label14.TabIndex = 13;
@@ -968,7 +965,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(39, 188);
+            this.label15.Location = new System.Drawing.Point(38, 262);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(88, 23);
             this.label15.TabIndex = 12;
@@ -978,7 +975,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(39, 142);
+            this.label16.Location = new System.Drawing.Point(38, 216);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(105, 23);
             this.label16.TabIndex = 11;
@@ -988,7 +985,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(39, 96);
+            this.label17.Location = new System.Drawing.Point(38, 170);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(104, 23);
             this.label17.TabIndex = 10;
@@ -998,47 +995,17 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(39, 50);
+            this.label18.Location = new System.Drawing.Point(38, 124);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(105, 23);
             this.label18.TabIndex = 9;
             this.label18.Text = "X轴加速度：";
             // 
-            // label_Inclinometer2_Wz
-            // 
-            this.label_Inclinometer2_Wz.AutoSize = true;
-            this.label_Inclinometer2_Wz.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_Wz.Location = new System.Drawing.Point(150, 418);
-            this.label_Inclinometer2_Wz.Name = "label_Inclinometer2_Wz";
-            this.label_Inclinometer2_Wz.Size = new System.Drawing.Size(112, 23);
-            this.label_Inclinometer2_Wz.TabIndex = 8;
-            this.label_Inclinometer2_Wz.Text = "倾角仪未连接";
-            // 
-            // label_Inclinometer2_Wy
-            // 
-            this.label_Inclinometer2_Wy.AutoSize = true;
-            this.label_Inclinometer2_Wy.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_Wy.Location = new System.Drawing.Point(150, 372);
-            this.label_Inclinometer2_Wy.Name = "label_Inclinometer2_Wy";
-            this.label_Inclinometer2_Wy.Size = new System.Drawing.Size(112, 23);
-            this.label_Inclinometer2_Wy.TabIndex = 7;
-            this.label_Inclinometer2_Wy.Text = "倾角仪未连接";
-            // 
-            // label_Inclinometer2_Wx
-            // 
-            this.label_Inclinometer2_Wx.AutoSize = true;
-            this.label_Inclinometer2_Wx.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_Wx.Location = new System.Drawing.Point(150, 326);
-            this.label_Inclinometer2_Wx.Name = "label_Inclinometer2_Wx";
-            this.label_Inclinometer2_Wx.Size = new System.Drawing.Size(112, 23);
-            this.label_Inclinometer2_Wx.TabIndex = 6;
-            this.label_Inclinometer2_Wx.Text = "倾角仪未连接";
-            // 
             // label_Inclinometer2_THETAz
             // 
             this.label_Inclinometer2_THETAz.AutoSize = true;
             this.label_Inclinometer2_THETAz.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_THETAz.Location = new System.Drawing.Point(150, 280);
+            this.label_Inclinometer2_THETAz.Location = new System.Drawing.Point(149, 354);
             this.label_Inclinometer2_THETAz.Name = "label_Inclinometer2_THETAz";
             this.label_Inclinometer2_THETAz.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer2_THETAz.TabIndex = 5;
@@ -1048,7 +1015,7 @@
             // 
             this.label_Inclinometer2_THETAy.AutoSize = true;
             this.label_Inclinometer2_THETAy.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_THETAy.Location = new System.Drawing.Point(150, 234);
+            this.label_Inclinometer2_THETAy.Location = new System.Drawing.Point(149, 308);
             this.label_Inclinometer2_THETAy.Name = "label_Inclinometer2_THETAy";
             this.label_Inclinometer2_THETAy.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer2_THETAy.TabIndex = 4;
@@ -1058,7 +1025,7 @@
             // 
             this.label_Inclinometer2_THETAx.AutoSize = true;
             this.label_Inclinometer2_THETAx.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_THETAx.Location = new System.Drawing.Point(150, 188);
+            this.label_Inclinometer2_THETAx.Location = new System.Drawing.Point(149, 262);
             this.label_Inclinometer2_THETAx.Name = "label_Inclinometer2_THETAx";
             this.label_Inclinometer2_THETAx.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer2_THETAx.TabIndex = 3;
@@ -1068,7 +1035,7 @@
             // 
             this.label_Inclinometer2_Az.AutoSize = true;
             this.label_Inclinometer2_Az.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_Az.Location = new System.Drawing.Point(150, 142);
+            this.label_Inclinometer2_Az.Location = new System.Drawing.Point(149, 216);
             this.label_Inclinometer2_Az.Name = "label_Inclinometer2_Az";
             this.label_Inclinometer2_Az.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer2_Az.TabIndex = 2;
@@ -1078,7 +1045,7 @@
             // 
             this.label_Inclinometer2_Ay.AutoSize = true;
             this.label_Inclinometer2_Ay.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_Ay.Location = new System.Drawing.Point(150, 96);
+            this.label_Inclinometer2_Ay.Location = new System.Drawing.Point(149, 170);
             this.label_Inclinometer2_Ay.Name = "label_Inclinometer2_Ay";
             this.label_Inclinometer2_Ay.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer2_Ay.TabIndex = 1;
@@ -1088,7 +1055,7 @@
             // 
             this.label_Inclinometer2_Ax.AutoSize = true;
             this.label_Inclinometer2_Ax.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer2_Ax.Location = new System.Drawing.Point(150, 50);
+            this.label_Inclinometer2_Ax.Location = new System.Drawing.Point(149, 124);
             this.label_Inclinometer2_Ax.Name = "label_Inclinometer2_Ax";
             this.label_Inclinometer2_Ax.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer2_Ax.TabIndex = 0;
@@ -1096,18 +1063,14 @@
             // 
             // groupBox_Inclinometer1
             // 
+            this.groupBox_Inclinometer1.Controls.Add(this.comboBox_Inclinometer1);
             this.groupBox_Inclinometer1.Controls.Add(this.label1);
-            this.groupBox_Inclinometer1.Controls.Add(this.label2);
-            this.groupBox_Inclinometer1.Controls.Add(this.label3);
             this.groupBox_Inclinometer1.Controls.Add(this.label4);
             this.groupBox_Inclinometer1.Controls.Add(this.label5);
             this.groupBox_Inclinometer1.Controls.Add(this.label6);
             this.groupBox_Inclinometer1.Controls.Add(this.label7);
             this.groupBox_Inclinometer1.Controls.Add(this.label8);
             this.groupBox_Inclinometer1.Controls.Add(this.label9);
-            this.groupBox_Inclinometer1.Controls.Add(this.label_Inclinometer1_Wz);
-            this.groupBox_Inclinometer1.Controls.Add(this.label_Inclinometer1_Wy);
-            this.groupBox_Inclinometer1.Controls.Add(this.label_Inclinometer1_Wx);
             this.groupBox_Inclinometer1.Controls.Add(this.label_Inclinometer1_THETAz);
             this.groupBox_Inclinometer1.Controls.Add(this.label_Inclinometer1_THETAy);
             this.groupBox_Inclinometer1.Controls.Add(this.label_Inclinometer1_THETAx);
@@ -1123,41 +1086,33 @@
             this.groupBox_Inclinometer1.TabStop = false;
             this.groupBox_Inclinometer1.Text = "倾角仪1";
             // 
+            // comboBox_Inclinometer1
+            // 
+            this.comboBox_Inclinometer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.comboBox_Inclinometer1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.comboBox_Inclinometer1.ForeColor = System.Drawing.Color.White;
+            this.comboBox_Inclinometer1.FormattingEnabled = true;
+            this.comboBox_Inclinometer1.Location = new System.Drawing.Point(150, 50);
+            this.comboBox_Inclinometer1.Name = "comboBox_Inclinometer1";
+            this.comboBox_Inclinometer1.Size = new System.Drawing.Size(171, 36);
+            this.comboBox_Inclinometer1.TabIndex = 24;
+            this.comboBox_Inclinometer1.SelectedIndexChanged += new System.EventHandler(this.comboBox_Inclinometer1_SelectedIndexChanged);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(39, 418);
+            this.label1.Location = new System.Drawing.Point(39, 58);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 23);
-            this.label1.TabIndex = 17;
-            this.label1.Text = "Z轴角速度：";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(39, 372);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 23);
-            this.label2.TabIndex = 16;
-            this.label2.Text = "Y轴角速度：";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(39, 326);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(105, 23);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "X轴角速度：";
+            this.label1.Size = new System.Drawing.Size(78, 23);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "串口号：";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(39, 280);
+            this.label4.Location = new System.Drawing.Point(39, 405);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(88, 23);
             this.label4.TabIndex = 14;
@@ -1167,7 +1122,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(39, 234);
+            this.label5.Location = new System.Drawing.Point(39, 349);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(87, 23);
             this.label5.TabIndex = 13;
@@ -1177,7 +1132,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(39, 188);
+            this.label6.Location = new System.Drawing.Point(39, 293);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(88, 23);
             this.label6.TabIndex = 12;
@@ -1187,7 +1142,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(39, 142);
+            this.label7.Location = new System.Drawing.Point(39, 237);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(105, 23);
             this.label7.TabIndex = 11;
@@ -1197,7 +1152,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(39, 96);
+            this.label8.Location = new System.Drawing.Point(39, 181);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(104, 23);
             this.label8.TabIndex = 10;
@@ -1207,47 +1162,17 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(39, 50);
+            this.label9.Location = new System.Drawing.Point(39, 125);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(105, 23);
             this.label9.TabIndex = 9;
             this.label9.Text = "X轴加速度：";
             // 
-            // label_Inclinometer1_Wz
-            // 
-            this.label_Inclinometer1_Wz.AutoSize = true;
-            this.label_Inclinometer1_Wz.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_Wz.Location = new System.Drawing.Point(150, 418);
-            this.label_Inclinometer1_Wz.Name = "label_Inclinometer1_Wz";
-            this.label_Inclinometer1_Wz.Size = new System.Drawing.Size(112, 23);
-            this.label_Inclinometer1_Wz.TabIndex = 8;
-            this.label_Inclinometer1_Wz.Text = "倾角仪未连接";
-            // 
-            // label_Inclinometer1_Wy
-            // 
-            this.label_Inclinometer1_Wy.AutoSize = true;
-            this.label_Inclinometer1_Wy.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_Wy.Location = new System.Drawing.Point(150, 372);
-            this.label_Inclinometer1_Wy.Name = "label_Inclinometer1_Wy";
-            this.label_Inclinometer1_Wy.Size = new System.Drawing.Size(112, 23);
-            this.label_Inclinometer1_Wy.TabIndex = 7;
-            this.label_Inclinometer1_Wy.Text = "倾角仪未连接";
-            // 
-            // label_Inclinometer1_Wx
-            // 
-            this.label_Inclinometer1_Wx.AutoSize = true;
-            this.label_Inclinometer1_Wx.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_Wx.Location = new System.Drawing.Point(150, 326);
-            this.label_Inclinometer1_Wx.Name = "label_Inclinometer1_Wx";
-            this.label_Inclinometer1_Wx.Size = new System.Drawing.Size(112, 23);
-            this.label_Inclinometer1_Wx.TabIndex = 6;
-            this.label_Inclinometer1_Wx.Text = "倾角仪未连接";
-            // 
             // label_Inclinometer1_THETAz
             // 
             this.label_Inclinometer1_THETAz.AutoSize = true;
             this.label_Inclinometer1_THETAz.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_THETAz.Location = new System.Drawing.Point(150, 280);
+            this.label_Inclinometer1_THETAz.Location = new System.Drawing.Point(150, 405);
             this.label_Inclinometer1_THETAz.Name = "label_Inclinometer1_THETAz";
             this.label_Inclinometer1_THETAz.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer1_THETAz.TabIndex = 5;
@@ -1257,7 +1182,7 @@
             // 
             this.label_Inclinometer1_THETAy.AutoSize = true;
             this.label_Inclinometer1_THETAy.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_THETAy.Location = new System.Drawing.Point(150, 234);
+            this.label_Inclinometer1_THETAy.Location = new System.Drawing.Point(150, 349);
             this.label_Inclinometer1_THETAy.Name = "label_Inclinometer1_THETAy";
             this.label_Inclinometer1_THETAy.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer1_THETAy.TabIndex = 4;
@@ -1267,7 +1192,7 @@
             // 
             this.label_Inclinometer1_THETAx.AutoSize = true;
             this.label_Inclinometer1_THETAx.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_THETAx.Location = new System.Drawing.Point(150, 188);
+            this.label_Inclinometer1_THETAx.Location = new System.Drawing.Point(150, 293);
             this.label_Inclinometer1_THETAx.Name = "label_Inclinometer1_THETAx";
             this.label_Inclinometer1_THETAx.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer1_THETAx.TabIndex = 3;
@@ -1277,7 +1202,7 @@
             // 
             this.label_Inclinometer1_Az.AutoSize = true;
             this.label_Inclinometer1_Az.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_Az.Location = new System.Drawing.Point(150, 142);
+            this.label_Inclinometer1_Az.Location = new System.Drawing.Point(150, 237);
             this.label_Inclinometer1_Az.Name = "label_Inclinometer1_Az";
             this.label_Inclinometer1_Az.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer1_Az.TabIndex = 2;
@@ -1287,7 +1212,7 @@
             // 
             this.label_Inclinometer1_Ay.AutoSize = true;
             this.label_Inclinometer1_Ay.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_Ay.Location = new System.Drawing.Point(150, 96);
+            this.label_Inclinometer1_Ay.Location = new System.Drawing.Point(150, 181);
             this.label_Inclinometer1_Ay.Name = "label_Inclinometer1_Ay";
             this.label_Inclinometer1_Ay.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer1_Ay.TabIndex = 1;
@@ -1297,7 +1222,7 @@
             // 
             this.label_Inclinometer1_Ax.AutoSize = true;
             this.label_Inclinometer1_Ax.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Inclinometer1_Ax.Location = new System.Drawing.Point(150, 50);
+            this.label_Inclinometer1_Ax.Location = new System.Drawing.Point(150, 125);
             this.label_Inclinometer1_Ax.Name = "label_Inclinometer1_Ax";
             this.label_Inclinometer1_Ax.Size = new System.Drawing.Size(112, 23);
             this.label_Inclinometer1_Ax.TabIndex = 0;
@@ -1312,6 +1237,7 @@
             this.pictureBox_Start.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_Start.TabIndex = 11;
             this.pictureBox_Start.TabStop = false;
+            this.pictureBox_Start.Click += new System.EventHandler(this.pictureBox_Start_Click);
             // 
             // pictureBox_Pause
             // 
@@ -1332,6 +1258,22 @@
             this.pictureBox_End.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_End.TabIndex = 13;
             this.pictureBox_End.TabStop = false;
+            this.pictureBox_End.Click += new System.EventHandler(this.pictureBox_End_Click);
+            // 
+            // pictureBox_Refresh
+            // 
+            this.pictureBox_Refresh.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_Refresh.Image")));
+            this.pictureBox_Refresh.Location = new System.Drawing.Point(794, 19);
+            this.pictureBox_Refresh.Name = "pictureBox_Refresh";
+            this.pictureBox_Refresh.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox_Refresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox_Refresh.TabIndex = 14;
+            this.pictureBox_Refresh.TabStop = false;
+            this.pictureBox_Refresh.Click += new System.EventHandler(this.pictureBox_Refresh_Click);
+            // 
+            // timer_Main
+            // 
+            this.timer_Main.Tick += new System.EventHandler(this.timer_Main_Tick);
             // 
             // Form1
             // 
@@ -1339,15 +1281,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(1924, 1078);
+            this.Controls.Add(this.pictureBox_Refresh);
             this.Controls.Add(this.pictureBox_End);
             this.Controls.Add(this.pictureBox_Pause);
             this.Controls.Add(this.pictureBox_Start);
             this.Controls.Add(this.panel_OriginData);
             this.Controls.Add(this.pictureBox_Min);
             this.Controls.Add(this.pictureBox_Close);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.statusStrip_Line);
             this.Controls.Add(this.statusStrip_Left);
-            this.Controls.Add(this.statusStrip_bottom);
+            this.Controls.Add(this.statusStrip_Bottom);
             this.Controls.Add(this.label_Name);
             this.Controls.Add(this.pictureBox_Logo);
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -1359,13 +1302,13 @@
             this.Text = "基于子母机协同的高效铁轨检修机控制中心";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.statusStrip_bottom.ResumeLayout(false);
-            this.statusStrip_bottom.PerformLayout();
+            this.statusStrip_Bottom.ResumeLayout(false);
+            this.statusStrip_Bottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Logo)).EndInit();
             this.statusStrip_Left.ResumeLayout(false);
             this.statusStrip_Left.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.statusStrip_Line.ResumeLayout(false);
+            this.statusStrip_Line.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Min)).EndInit();
             this.panel_OriginData.ResumeLayout(false);
@@ -1386,13 +1329,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Start)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Pause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_End)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Refresh)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.StatusStrip statusStrip_bottom;
+        private System.Windows.Forms.StatusStrip statusStrip_Bottom;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_Camera;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_Inclinometer;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_MotionDetector;
@@ -1401,7 +1345,7 @@
         private System.Windows.Forms.PictureBox pictureBox_Logo;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_State;
         private System.Windows.Forms.StatusStrip statusStrip_Left;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip statusStrip_Line;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel8;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_ControlCenter;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel12;
@@ -1423,9 +1367,6 @@
         private System.Windows.Forms.Label label_Inclinometer1_Az;
         private System.Windows.Forms.Label label_Inclinometer1_Ay;
         private System.Windows.Forms.Label label_Inclinometer1_Ax;
-        private System.Windows.Forms.Label label_Inclinometer1_Wz;
-        private System.Windows.Forms.Label label_Inclinometer1_Wy;
-        private System.Windows.Forms.Label label_Inclinometer1_Wx;
         private System.Windows.Forms.Label label_Inclinometer1_THETAz;
         private System.Windows.Forms.Label label_Inclinometer1_THETAy;
         private System.Windows.Forms.Label label_Inclinometer1_THETAx;
@@ -1458,27 +1399,18 @@
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.GroupBox groupBox_Inclinometer2;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label_Inclinometer2_Wz;
-        private System.Windows.Forms.Label label_Inclinometer2_Wy;
-        private System.Windows.Forms.Label label_Inclinometer2_Wx;
         private System.Windows.Forms.Label label_Inclinometer2_THETAz;
         private System.Windows.Forms.Label label_Inclinometer2_THETAy;
         private System.Windows.Forms.Label label_Inclinometer2_THETAx;
         private System.Windows.Forms.Label label_Inclinometer2_Az;
         private System.Windows.Forms.Label label_Inclinometer2_Ay;
         private System.Windows.Forms.Label label_Inclinometer2_Ax;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
@@ -1500,6 +1432,13 @@
         private System.Windows.Forms.Label label51;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Button button_MonitorCamera;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox_Inclinometer2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBox_Inclinometer1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox_Refresh;
+        private System.Windows.Forms.Timer timer_Main;
     }
 }
 
