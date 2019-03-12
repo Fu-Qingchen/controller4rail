@@ -2181,49 +2181,11 @@
         JEmSJEnS36xWn27nYT0ZtR3IAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="pictureBox_Refresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        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
-        AAAAAElFTkSuQmCC
-</value>
-  </data>
   <metadata name="timer_Main.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>503, 17</value>
+  </metadata>
+  <metadata name="timer_System.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>604, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>61</value>

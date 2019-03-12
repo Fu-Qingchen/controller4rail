@@ -30,9 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.statusStrip_Bottom = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel_State = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_Camera = new System.Windows.Forms.ToolStripStatusLabel();
@@ -99,8 +104,8 @@
             this.label32 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
+            this.label_IncrementalTime = new System.Windows.Forms.Label();
+            this.label_SystemTime = new System.Windows.Forms.Label();
             this.groupBox_Inclinometer2 = new System.Windows.Forms.GroupBox();
             this.comboBox_Inclinometer2 = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -134,8 +139,8 @@
             this.pictureBox_Start = new System.Windows.Forms.PictureBox();
             this.pictureBox_Pause = new System.Windows.Forms.PictureBox();
             this.pictureBox_End = new System.Windows.Forms.PictureBox();
-            this.pictureBox_Refresh = new System.Windows.Forms.PictureBox();
             this.timer_Main = new System.Windows.Forms.Timer(this.components);
+            this.timer_System = new System.Windows.Forms.Timer(this.components);
             this.statusStrip_Bottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Logo)).BeginInit();
             this.statusStrip_Left.SuspendLayout();
@@ -154,12 +159,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Start)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Pause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_End)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Refresh)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip_Bottom
             // 
-            this.statusStrip_Bottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(202)))), ((int)(((byte)(81)))), ((int)(((byte)(0)))));
+            this.statusStrip_Bottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(33)))), ((int)(((byte)(122)))));
             this.statusStrip_Bottom.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip_Bottom.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel_State,
@@ -536,6 +540,7 @@
             // 
             this.comboBox_MonitorCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
             this.comboBox_MonitorCamera.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.comboBox_MonitorCamera.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox_MonitorCamera.ForeColor = System.Drawing.Color.White;
             this.comboBox_MonitorCamera.FormattingEnabled = true;
             this.comboBox_MonitorCamera.Location = new System.Drawing.Point(19, 142);
@@ -581,17 +586,102 @@
             // chart1
             // 
             this.chart1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.chart1.BorderSkin.BorderColor = System.Drawing.Color.White;
             this.chart1.BorderSkin.PageColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea2.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Milliseconds;
+            chartArea2.AxisX.IsLabelAutoFit = false;
+            chartArea2.AxisX.IsMarginVisible = false;
+            chartArea2.AxisX.IsStartedFromZero = false;
+            chartArea2.AxisX.LabelStyle.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea2.AxisX.LabelStyle.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.AxisX.LineColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.AxisX.LineWidth = 2;
+            chartArea2.AxisX.LogarithmBase = 400D;
+            chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.AxisX.MajorGrid.LineWidth = 2;
+            chartArea2.AxisX.ScaleBreakStyle.LineColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.AxisX.ScaleView.Size = 500D;
+            chartArea2.AxisX.TitleForeColor = System.Drawing.Color.White;
+            chartArea2.AxisY.IsLabelAutoFit = false;
+            chartArea2.AxisY.IsMarginVisible = false;
+            chartArea2.AxisY.IsStartedFromZero = false;
+            chartArea2.AxisY.LabelStyle.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea2.AxisY.LabelStyle.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.AxisY.LabelStyle.Format = "{0:0.00}";
+            chartArea2.AxisY.LineColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.AxisY.LineWidth = 2;
+            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            chartArea2.BackColor = System.Drawing.Color.Transparent;
+            chartArea2.CursorX.IsUserEnabled = true;
+            chartArea2.CursorX.IsUserSelectionEnabled = true;
+            chartArea2.CursorX.LineColor = System.Drawing.Color.DodgerBlue;
+            chartArea2.CursorX.SelectionColor = System.Drawing.Color.LightBlue;
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.BackColor = System.Drawing.Color.Transparent;
+            legend2.Font = new System.Drawing.Font("Times New Roman", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            legend2.ForeColor = System.Drawing.Color.White;
+            legend2.IsTextAutoFit = false;
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(6, 33);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            series7.BackImageTransparentColor = System.Drawing.Color.Transparent;
+            series7.BorderWidth = 2;
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series7.Color = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(133)))), ((int)(((byte)(244)))));
+            series7.Font = new System.Drawing.Font("CMU Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            series7.LabelBackColor = System.Drawing.Color.Transparent;
+            series7.LabelForeColor = System.Drawing.Color.White;
+            series7.Legend = "Legend1";
+            series7.MarkerColor = System.Drawing.Color.Transparent;
+            series7.Name = "Ay1";
+            series7.ShadowColor = System.Drawing.Color.Transparent;
+            series7.SmartLabelStyle.CalloutLineColor = System.Drawing.Color.White;
+            series8.BorderWidth = 2;
+            series8.ChartArea = "ChartArea1";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series8.Color = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(133)))), ((int)(((byte)(244)))));
+            series8.Font = new System.Drawing.Font("CMU Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            series8.Legend = "Legend1";
+            series8.Name = "Ay2";
+            series9.BorderWidth = 2;
+            series9.ChartArea = "ChartArea1";
+            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series9.Color = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(168)))), ((int)(((byte)(83)))));
+            series9.Font = new System.Drawing.Font("CMU Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            series9.Legend = "Legend1";
+            series9.Name = "Az1";
+            series10.BorderWidth = 2;
+            series10.ChartArea = "ChartArea1";
+            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series10.Color = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(168)))), ((int)(((byte)(83)))));
+            series10.Font = new System.Drawing.Font("CMU Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            series10.Legend = "Legend1";
+            series10.Name = "Az2";
+            series11.BorderWidth = 2;
+            series11.ChartArea = "ChartArea1";
+            series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series11.Color = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(188)))), ((int)(((byte)(5)))));
+            series11.Font = new System.Drawing.Font("CMU Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            series11.Legend = "Legend1";
+            series11.Name = "θx1";
+            series12.BorderWidth = 2;
+            series12.ChartArea = "ChartArea1";
+            series12.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series12.Color = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(188)))), ((int)(((byte)(5)))));
+            series12.Font = new System.Drawing.Font("CMU Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            series12.Legend = "Legend1";
+            series12.Name = "θx2";
+            this.chart1.Series.Add(series7);
+            this.chart1.Series.Add(series8);
+            this.chart1.Series.Add(series9);
+            this.chart1.Series.Add(series10);
+            this.chart1.Series.Add(series11);
+            this.chart1.Series.Add(series12);
             this.chart1.Size = new System.Drawing.Size(879, 430);
             this.chart1.TabIndex = 21;
             this.chart1.Text = "chart1";
@@ -703,8 +793,8 @@
             this.groupBox1.Controls.Add(this.label32);
             this.groupBox1.Controls.Add(this.label33);
             this.groupBox1.Controls.Add(this.label34);
-            this.groupBox1.Controls.Add(this.label35);
-            this.groupBox1.Controls.Add(this.label36);
+            this.groupBox1.Controls.Add(this.label_IncrementalTime);
+            this.groupBox1.Controls.Add(this.label_SystemTime);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(481, 14);
@@ -790,9 +880,9 @@
             this.label26.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label26.Location = new System.Drawing.Point(39, 96);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(104, 23);
+            this.label26.Size = new System.Drawing.Size(78, 23);
             this.label26.TabIndex = 10;
-            this.label26.Text = "Y轴加速度：";
+            this.label26.Text = "相对时间";
             // 
             // label27
             // 
@@ -800,9 +890,9 @@
             this.label27.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label27.Location = new System.Drawing.Point(39, 50);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(105, 23);
+            this.label27.Size = new System.Drawing.Size(78, 23);
             this.label27.TabIndex = 9;
-            this.label27.Text = "X轴加速度：";
+            this.label27.Text = "系统时间";
             // 
             // label28
             // 
@@ -874,25 +964,25 @@
             this.label34.TabIndex = 2;
             this.label34.Text = "倾角仪未连接";
             // 
-            // label35
+            // label_IncrementalTime
             // 
-            this.label35.AutoSize = true;
-            this.label35.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label35.Location = new System.Drawing.Point(150, 96);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(112, 23);
-            this.label35.TabIndex = 1;
-            this.label35.Text = "倾角仪未连接";
+            this.label_IncrementalTime.AutoSize = true;
+            this.label_IncrementalTime.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_IncrementalTime.Location = new System.Drawing.Point(150, 96);
+            this.label_IncrementalTime.Name = "label_IncrementalTime";
+            this.label_IncrementalTime.Size = new System.Drawing.Size(95, 23);
+            this.label_IncrementalTime.TabIndex = 1;
+            this.label_IncrementalTime.Text = "程序未开始";
             // 
-            // label36
+            // label_SystemTime
             // 
-            this.label36.AutoSize = true;
-            this.label36.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label36.Location = new System.Drawing.Point(150, 50);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(112, 23);
-            this.label36.TabIndex = 0;
-            this.label36.Text = "倾角仪未连接";
+            this.label_SystemTime.AutoSize = true;
+            this.label_SystemTime.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_SystemTime.Location = new System.Drawing.Point(150, 50);
+            this.label_SystemTime.Name = "label_SystemTime";
+            this.label_SystemTime.Size = new System.Drawing.Size(61, 23);
+            this.label_SystemTime.TabIndex = 0;
+            this.label_SystemTime.Text = "加载中";
             // 
             // groupBox_Inclinometer2
             // 
@@ -1260,20 +1350,14 @@
             this.pictureBox_End.TabStop = false;
             this.pictureBox_End.Click += new System.EventHandler(this.pictureBox_End_Click);
             // 
-            // pictureBox_Refresh
-            // 
-            this.pictureBox_Refresh.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_Refresh.Image")));
-            this.pictureBox_Refresh.Location = new System.Drawing.Point(794, 19);
-            this.pictureBox_Refresh.Name = "pictureBox_Refresh";
-            this.pictureBox_Refresh.Size = new System.Drawing.Size(35, 35);
-            this.pictureBox_Refresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox_Refresh.TabIndex = 14;
-            this.pictureBox_Refresh.TabStop = false;
-            this.pictureBox_Refresh.Click += new System.EventHandler(this.pictureBox_Refresh_Click);
-            // 
             // timer_Main
             // 
+            this.timer_Main.Interval = 80;
             this.timer_Main.Tick += new System.EventHandler(this.timer_Main_Tick);
+            // 
+            // timer_System
+            // 
+            this.timer_System.Tick += new System.EventHandler(this.timer_System_Tick);
             // 
             // Form1
             // 
@@ -1281,7 +1365,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(1924, 1078);
-            this.Controls.Add(this.pictureBox_Refresh);
             this.Controls.Add(this.pictureBox_End);
             this.Controls.Add(this.pictureBox_Pause);
             this.Controls.Add(this.pictureBox_Start);
@@ -1329,7 +1412,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Start)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Pause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_End)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Refresh)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1396,8 +1478,8 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label_IncrementalTime;
+        private System.Windows.Forms.Label label_SystemTime;
         private System.Windows.Forms.GroupBox groupBox_Inclinometer2;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
@@ -1437,8 +1519,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBox_Inclinometer1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox_Refresh;
         private System.Windows.Forms.Timer timer_Main;
+        private System.Windows.Forms.Timer timer_System;
     }
 }
 

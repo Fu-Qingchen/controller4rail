@@ -16,6 +16,7 @@ namespace HostComputerForRail
     {
         private DateTime TimeStart = DateTime.Now;
         bool bool_start = false;
+        bool bool_getInclinometnerData = false;
 
         public Form1()
         {
@@ -24,6 +25,9 @@ namespace HostComputerForRail
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //系统信息部分
+            timer_System.Start();
+
             //实时监控部分
             bool_haveCamera = comboBox_MonitorCamera_Load();
 
@@ -43,21 +47,10 @@ namespace HostComputerForRail
             }
         }
 
-        //串口重置
-        private void pictureBox_Refresh_Click(object sender, EventArgs e)
-        {
-            bool_Inclinometer1 = false;
-            bool_Inclinometer2 = false;
-            bool_haveCamera = false;
-            comboBox_Inclinometer1.SelectedIndex = -1;
-            comboBox_Inclinometer2.SelectedIndex = -1;
-            comboBox_MonitorCamera.SelectedIndex = -1;
-        }
-
         private void pictureBox_Start_Click(object sender, EventArgs e)
         {
             bool_start = true;
-            //timer_Main.Start();
+            timer_Main.Start();
         }
 
         private void pictureBox_End_Click(object sender, EventArgs e)
@@ -83,6 +76,17 @@ namespace HostComputerForRail
                 label_Inclinometer2_THETAx.Text = Angle[1, 0] + "";
                 label_Inclinometer2_THETAy.Text = Angle[1, 1] + "";
                 label_Inclinometer2_THETAz.Text = Angle[1, 2] + "";
+                label_IncrementalTime.Text = (DateTime.Now - TimeStart).TotalMilliseconds / 1000 + "";
+                if (!bool_getInclinometnerData)
+                {
+                    if (a[0, 0] != 0 || a[1, 0] != 0)
+                    {
+                        bool_getInclinometnerData = true;
+                    }
+                    statusStrip_Bottom.BackColor =
+                        System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+                }
+                chart1_Run();
             }
         }
 
@@ -145,7 +149,7 @@ namespace HostComputerForRail
             serialPort_Close(SerialPort_Inclinometer1);
             SerialPort_Inclinometer1.Open();
 
-            timer_Main.Start();
+            //timer_Main.Start();
         }
 
         private void comboBox_Inclinometer2_SelectedIndexChanged(object sender, EventArgs e)
@@ -163,10 +167,10 @@ namespace HostComputerForRail
 
             serialPort_Close(SerialPort_Inclinometer2);
             SerialPort_Inclinometer2.Open();
-            timer_Main.Start();
+            //timer_Main.Start();
         }
 
-        //以下获取串口数据部分, 改编于传感器厂商示例代码
+        //以下获取串口数据部分, 改编于传感器厂商开源代码
         delegate void UpdateData1(byte[] byteData);//声明一个委托
         delegate void UpdateData2(byte[] byteData);//声明一个委托
         byte[] RxBuffer1 = new byte[1000];
@@ -208,7 +212,7 @@ namespace HostComputerForRail
             usRxLength2 += usLength;
             while (usRxLength2 >= 11)
             {
-                UpdateData2 Update = new UpdateData2(DecodeData2);
+                UpdateData2 Update2 = new UpdateData2(DecodeData2);
                 RxBuffer2.CopyTo(byteTemp, 0);
                 if (!((byteTemp[0] == 0x55) & ((byteTemp[1] & 0x50) == 0x50)))
                 {
@@ -217,7 +221,7 @@ namespace HostComputerForRail
                     continue;
                 }
                 if (((byteTemp[0] + byteTemp[1] + byteTemp[2] + byteTemp[3] + byteTemp[4] + byteTemp[5] + byteTemp[6] + byteTemp[7] + byteTemp[8] + byteTemp[9]) & 0xff) == byteTemp[10])
-                    this.Invoke(Update, byteTemp);
+                    this.Invoke(Update2, byteTemp);
                 for (int i = 11; i < usRxLength2; i++) RxBuffer2[i - 11] = RxBuffer2[i];
                 usRxLength2 -= 11;
             }
@@ -348,6 +352,24 @@ namespace HostComputerForRail
         /*
          * ————————————————————————————————————————————UI界面设计————————————————————————————————————————————
          */
+        private void chart1_Run()
+        {
+            chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(),a[0,1]);
+            chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a[1,1]);
+            chart1.Series[2].Points.AddXY(DateTime.Now.Millisecond.ToString(), a[0,2]);
+            chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a[1,2]);
+            chart1.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[0,0]);
+            chart1.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[1,0]);
+            if (chart1.Series[0].Points.Count >= 400)
+            {
+                chart1.Series[0].Points.RemoveAt(0);
+                chart1.Series[1].Points.RemoveAt(0);
+                chart1.Series[2].Points.RemoveAt(0);
+                chart1.Series[3].Points.RemoveAt(0);
+                chart1.Series[4].Points.RemoveAt(0);
+                chart1.Series[5].Points.RemoveAt(0);
+            }
+        }
 
         private void toolStripStatusLabel_ControlCenter_MouseEnter(object sender, EventArgs e)
         {
@@ -439,6 +461,11 @@ namespace HostComputerForRail
                 System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             toolStripStatusLabel5.ForeColor =
                 System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
+        }
+
+        private void timer_System_Tick(object sender, EventArgs e)
+        {
+            label_SystemTime.Text = DateTime.Now + "";
         }
 
         private void toolStripStatusLabel_DataSolve_Click(object sender, EventArgs e)
