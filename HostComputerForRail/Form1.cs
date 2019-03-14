@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using AForge.Video.DirectShow;
 using System.Threading;
+using System.Data.SqlClient;
+using System.Globalization;
 
 namespace HostComputerForRail
 {
@@ -16,7 +18,6 @@ namespace HostComputerForRail
     {
         private DateTime TimeStart = DateTime.Now;
         bool bool_start = false;
-        bool bool_getInclinometnerData = false;
 
         public Form1()
         {
@@ -77,16 +78,56 @@ namespace HostComputerForRail
                 label_Inclinometer2_THETAy.Text = Angle[1, 1] + "";
                 label_Inclinometer2_THETAz.Text = Angle[1, 2] + "";
                 label_IncrementalTime.Text = (DateTime.Now - TimeStart).TotalMilliseconds / 1000 + "";
-                if (!bool_getInclinometnerData)
+                if(!((a[0, 0] == 0 && a[0, 1] == 0 && a[0, 2] == 0 && Angle[0, 0] == 0 && Angle[0, 1] == 0 && Angle[0, 2] == 0)|| 
+                    (a[1, 0] == 0 && a[1, 1] == 0 && a[1, 2] == 0 && Angle[1, 0] == 0 && Angle[1, 1] == 0 && Angle[1, 2] == 0)))
                 {
-                    if (a[0, 0] != 0 || a[1, 0] != 0)
-                    {
-                        bool_getInclinometnerData = true;
-                    }
+                    chart1_Run();
                     statusStrip_Bottom.BackColor =
-                        System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+                        System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(20)))));
+                    SQLconnect();
                 }
-                chart1_Run();
+            }
+        }
+
+        /*
+         * —————————————————————————————————————————数据库传输部分——————————————————————————————————————————
+         */
+        private string sqlDate;
+
+        private void SQLconnect()
+        {
+            string connsql = "server=FU-QINGCHEN\\SQLEXPRESS;integrated security=SSPI;database=Test";
+            try
+            {
+                using (SqlConnection mySQL = new SqlConnection())
+                {
+                    mySQL.ConnectionString = connsql;
+                    // 打开数据库连接
+                    mySQL.Open();
+                    // 向数据库中插入数据
+                    var format = "yyyy-MM-dd HH:mm:ss:fffffff";
+                    var stringDate = DateTime.Now.ToString(format);
+                    var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
+                    sqlDate = "insert Inclination_OriginDate(DateTime,"
+                        + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
+                        + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
+                        + ")values(SYSDATETIME(),"
+                        + a[0, 0] + "," + a[0, 1] + "," + a[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
+                        + a[1, 0] + "," + a[1, 1] + "," + a[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
+                        + ")";
+                    // 建立一个命令
+                    SqlCommand sqlCommand = new SqlCommand(sqlDate, mySQL);
+                    // 执行命令
+                    sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                toolStripStatusLabel_SQL.Text = "错误：" + ex.Message;
+            }
+            finally
+            {
+                toolStripStatusLabel_SQL.Text = "数据库已连接";
             }
         }
 
@@ -97,7 +138,7 @@ namespace HostComputerForRail
         string[] serialPortName;
         SerialPort SerialPort_Inclinometer1 = new SerialPort();
         SerialPort SerialPort_Inclinometer2 = new SerialPort();
-        double[,] a = new double[2,3], Angle = new double[2,3];
+        double[,] a = new double[2, 3], Angle = new double[2, 3];
         int serialPortNumber;
 
         //查询串口并加载
