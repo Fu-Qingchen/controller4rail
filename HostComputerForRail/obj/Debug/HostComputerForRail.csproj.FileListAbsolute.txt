@@ -20,3 +20,5 @@ E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Math.xml
 E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Video.xml
 E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\AForge.Video.DirectShow.xml
 E:\GitHub\HostComputerForRail\HostComputerForRail\obj\Debug\HostComputerForRail.csproj.CopyComplete
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\MathNet.Numerics.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\MathNet.Numerics.xml

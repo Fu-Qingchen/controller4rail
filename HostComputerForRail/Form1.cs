@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
-using AForge.Video.DirectShow;
 using System.Threading;
 using System.Data.SqlClient;
 using System.Globalization;
+using AForge.Video.DirectShow;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace HostComputerForRail
 {
@@ -64,31 +66,259 @@ namespace HostComputerForRail
         {
             if (bool_start)
             {
+                a_AfterTransform_Before = a_AfterTransform;
+                if (bool_startIntegrate)
+                {
+                    DateTime_Before = DateTime.Now;
+                }
+                else
+                {
+                    DateTime_Before = DateTime_Now;
+                }
+                velocity_Before = velocity;
+                DateTime_Now = DateTime.Now;
+                Transform();
+                RemoveInit();
+                Integration();
                 //TODO: 刷新数据
-                label_Inclinometer1_Ax.Text = a[0,0] + "";
-                label_Inclinometer1_Ay.Text = a[0,1] + "";
-                label_Inclinometer1_Az.Text = a[0,2] + "";
-                label_Inclinometer1_THETAx.Text = Angle[0,0] + "";
-                label_Inclinometer1_THETAy.Text = Angle[0,1] + "";
-                label_Inclinometer1_THETAz.Text = Angle[0,2] + "";
-                label_Inclinometer2_Ax.Text = a[1, 0] + "";
-                label_Inclinometer2_Ay.Text = a[1, 1] + "";
-                label_Inclinometer2_Az.Text = a[1, 2] + "";
-                label_Inclinometer2_THETAx.Text = Angle[1, 0] + "";
-                label_Inclinometer2_THETAy.Text = Angle[1, 1] + "";
-                label_Inclinometer2_THETAz.Text = Angle[1, 2] + "";
+                label_Inclinometer1_Ax.Text = a_AfterTransform[0, 0].ToString("F6");
+                label_Inclinometer1_Ay.Text = a_AfterTransform[0, 1].ToString("F6");
+                label_Inclinometer1_Az.Text = a_AfterTransform[0, 2].ToString("F6");
+                label_Inclinometer1_THETAx.Text = Angle[0, 0].ToString("F6");
+                label_Inclinometer1_THETAy.Text = Angle[0, 1].ToString("F6");
+                label_Inclinometer1_THETAz.Text = Angle[0, 2].ToString("F6");
+                label_Inclinometer2_Ax.Text = a_AfterTransform[1, 0].ToString("F6");
+                label_Inclinometer2_Ay.Text = a_AfterTransform[1, 1].ToString("F6");
+                label_Inclinometer2_Az.Text = a_AfterTransform[1, 2].ToString("F6");
+                label_Inclinometer2_THETAx.Text = Angle[1, 0].ToString("F6");
+                label_Inclinometer2_THETAy.Text = Angle[1, 1].ToString("F6");
+                label_Inclinometer2_THETAz.Text = Angle[1, 2].ToString("F6");
+                //Debug
+                label24.Text = displacement[0, 0].ToString("F6");
+                label23.Text = displacement[0, 1].ToString("F6");
+                label22.Text = displacement[0, 2].ToString("F6");
+                label21.Text = displacement[1, 0].ToString("F6");
+                label20.Text = displacement[1, 1].ToString("F6");
+                label19.Text = displacement[1, 2].ToString("F6");
+                //TODO: 更改 label_IncrementalTime 的计算逻辑
                 label_IncrementalTime.Text = (DateTime.Now - TimeStart).TotalMilliseconds / 1000 + "";
-                if(!((a[0, 0] == 0 && a[0, 1] == 0 && a[0, 2] == 0 && Angle[0, 0] == 0 && Angle[0, 1] == 0 && Angle[0, 2] == 0)|| 
+                if (!((a[0, 0] == 0 && a[0, 1] == 0 && a[0, 2] == 0 && Angle[0, 0] == 0 && Angle[0, 1] == 0 && Angle[0, 2] == 0) ||
                     (a[1, 0] == 0 && a[1, 1] == 0 && a[1, 2] == 0 && Angle[1, 0] == 0 && Angle[1, 1] == 0 && Angle[1, 2] == 0)))
                 {
                     chart1_Run();
                     statusStrip_Bottom.BackColor =
                         System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(20)))));
                     SQLconnect();
+                    //TODO: 改变toolStripStatusLabel_State.Image
                 }
             }
         }
 
+        /*
+         * —————————————————————————————————————————不平顺数据处理——————————————————————————————————————————
+         */
+        private double[,] a_AfterTransform = new double[2, 3];
+        private double[,] a_AfterTransform_Before = new double[2, 3];
+        private double[,] velocity = new double[2, 3];
+        private double[,] velocity_Before = new double[2, 3];
+        private double[,] displacement = new double[2, 3];
+        private bool bool_startIntegrate = false;
+        private DateTime DateTime_Before;
+        private DateTime DateTime_Now;
+        private int zeroPointForVelocity;
+        private double[,] error = new double[2, 3];   //零点漂移误差阈值
+        private double[,] a_AfterTransform_Init = new double[2, 3]; //初始误差
+        private List<double>[,] FixInit_Data = { { new List<double>(), new List<double>(), new List<double>() }, { new List<double>(), new List<double>(), new List<double>() } };
+
+        private void Transform()
+        {
+            for(int number = 0; number < 2; number++)
+            {
+                // 建立数组
+                Matrix<double> a_Matrix = DenseMatrix.OfArray(new double[,] { { a[number, 0], a[number, 1], a[number, 2], 1 } });
+                Matrix<double> Trx1 = DenseMatrix.OfArray(new double[,]
+                {
+                {1, 0, 0, 0},
+                {0, Math.Cos(Angle[number,0]*Math.PI/180), Math.Sin(Angle[number,0]*Math.PI/180), 0},
+                {0, -Math.Sin(Angle[number,0]*Math.PI/180), Math.Cos(Angle[number,0]*Math.PI/180), 0},
+                {0, 0, 0, 1},
+                });
+                Matrix<double> Try1 = DenseMatrix.OfArray(new double[,]
+                {
+                {Math.Cos(Angle[number,1]*Math.PI/180), 0, -Math.Sin(Angle[number,1]*Math.PI/180), 0},
+                {0, 1, 0, 0},
+                {Math.Sin(Angle[number,1]*Math.PI/180), 0, Math.Cos(Angle[number,1]*Math.PI/180), 0},
+                {0, 0, 0, 1},
+                });
+                Matrix<double> Trz1 = DenseMatrix.OfArray(new double[,]
+                {
+                {Math.Cos(Angle[number,2]*Math.PI/180), Math.Sin(Angle[number,2]*Math.PI/180), 0, 0},
+                {-Math.Sin(Angle[number,2]*Math.PI/180), Math.Cos(Angle[number,2]*Math.PI/180), 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 1},
+                });
+                Matrix<double> Trx3 = DenseMatrix.OfArray(new double[,]
+                {
+                {1, 0, 0, 0},
+                {0, Math.Cos(-Angle[number,0]*Math.PI/180), Math.Sin(-Angle[number,0]*Math.PI/180), 0},
+                {0, -Math.Sin(-Angle[number,0]*Math.PI/180), Math.Cos(-Angle[number,0]*Math.PI/180), 0},
+                {0, 0, 0, 1},
+                });
+                Matrix<double> Try3 = DenseMatrix.OfArray(new double[,]
+                {
+                {Math.Cos(-Angle[number,1]*Math.PI/180), 0, -Math.Sin(-Angle[number,1]*Math.PI/180), 0},
+                {0, 1, 0, 0},
+                {Math.Sin(-Angle[number,1]*Math.PI/180), 0, Math.Cos(-Angle[number,1]*Math.PI/180), 0},
+                {0, 0, 0, 1},
+                });
+                Matrix<double> Trz3 = DenseMatrix.OfArray(new double[,]
+                {
+                {Math.Cos(-Angle[number,2]*Math.PI/180), Math.Sin(-Angle[number,2]*Math.PI/180), 0, 0},
+                {-Math.Sin(-Angle[number,2]*Math.PI/180), Math.Cos(-Angle[number,2]*Math.PI/180), 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 1},
+                });
+                // 三角变换
+                Matrix<double> T1 = Trx1 * Try1 * Trz1;
+                Matrix<double> T3 = Trz3 * Try3 * Trx3;
+                Matrix<double> T2 = DenseMatrix.OfArray(new double[,]
+                {
+                {1, 0, 0, 0},
+                {0, 1, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, -1, 1}
+                });
+                Matrix<double> T = T1 * T2 * T3;
+                a_Matrix = a_Matrix * T;
+                for (int i = 0; i < 3; i++)
+                {
+                    a_AfterTransform[number, i] = a_Matrix[0,i];
+                }
+            }
+        }
+
+        
+
+        private void Integration()
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    // 积分求解位移和速度
+                    velocity[i, j] = velocity_Before[i, j]
+                        + 0.5 * (a_AfterTransform_Before[i, j] + a_AfterTransform[i, j]) * (DateTime_Now - DateTime_Before).TotalMilliseconds / 1000;
+                    displacement[i, j] = displacement[i, j] 
+                        + 0.5 * (a_AfterTransform_Before[i, j] + a_AfterTransform[i, j]) * (DateTime_Now - DateTime_Before).TotalMilliseconds / 1000;
+                    // 去除速度的零点漂移
+                    if (a_AfterTransform[i,j] == 0)
+                    {
+                        zeroPointForVelocity++;
+                    }
+                    else
+                    {
+                        zeroPointForVelocity = 0;
+                    }
+
+                    if (zeroPointForVelocity >= 30)
+                    {
+                        velocity_Before[i, j] = 0;
+                    }
+                }
+            }
+        }
+
+        private void RemoveInit()
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    //获得误差
+                    a_AfterTransform[i,j] = a_AfterTransform[i,j] - a_AfterTransform_Init[i,j];
+                    //去除零点漂移
+                    if (Math.Abs(a_AfterTransform[i, j]) < error[i, j])
+                    {
+                        a_AfterTransform[i, j] = 0;
+                    }
+                }
+            }
+        }
+
+        private void pictureBox_fixSensor_Click(object sender, EventArgs e)
+        {
+            timer_Sensor.Start();
+            timer_FixInit.Start();
+            
+            label_Inclinometer1_Ax.Text = "倾角仪正在校准";
+            label_Inclinometer1_Ay.Text = "倾角仪正在校准";
+            label_Inclinometer1_Az.Text = "倾角仪正在校准";
+            label_Inclinometer1_THETAx.Text = "倾角仪正在校准";
+            label_Inclinometer1_THETAy.Text = "倾角仪正在校准";
+            label_Inclinometer1_THETAz.Text = "倾角仪正在校准";
+            label_Inclinometer2_Ax.Text = "倾角仪正在校准";
+            label_Inclinometer2_Ay.Text = "倾角仪正在校准";
+            label_Inclinometer2_Az.Text = "倾角仪正在校准";
+            label_Inclinometer2_THETAx.Text = "倾角仪正在校准";
+            label_Inclinometer2_THETAy.Text = "倾角仪正在校准";
+            label_Inclinometer2_THETAz.Text = "倾角仪正在校准";
+        }
+
+        private void timer_FixInit_Tick(object sender, EventArgs e)
+        {
+            timer_Sensor.Stop();
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    // 获取样本的无偏估计, 及其标准偏差
+                    double sum = 0;
+                    double sigma = 0;
+                    int k = 0;
+                    a_AfterTransform_Init[i, j] = FixInit_Data[i,j].Average();
+
+                    foreach (double x in FixInit_Data[i, j])
+                    {
+                        sum = sum + x;
+                        sigma = sigma + Math.Pow((x - a_AfterTransform_Init[i, j]), 2);
+                        k++;
+                    }
+                    error[i, j] = 3 * Math.Sqrt(sigma / ((k - 1) * k)) * 12;
+                    FixInit_Data[i, j].Clear();
+                }
+            }
+            timer_FixInit.Stop();
+            label_Inclinometer1_Ax.Text = a_AfterTransform_Init[0,0] + "";
+            label_Inclinometer1_Ay.Text = a_AfterTransform_Init[0,1] + "";
+            label_Inclinometer1_Az.Text = a_AfterTransform_Init[0,2] + "";
+            label_Inclinometer1_THETAx.Text = "校准完成";
+            label_Inclinometer1_THETAy.Text = "校准完成";
+            label_Inclinometer1_THETAz.Text = "校准完成";
+            label_Inclinometer2_Ax.Text = a_AfterTransform_Init[1,0] + "";
+            label_Inclinometer2_Ay.Text = a_AfterTransform_Init[1,1] + "";
+            label_Inclinometer2_Az.Text = a_AfterTransform_Init[1,2] + "";
+            label_Inclinometer2_THETAx.Text = "校准完成";
+            label_Inclinometer2_THETAy.Text = "校准完成";
+            label_Inclinometer2_THETAz.Text = "校准完成";
+            label34.Text = error[0, 0] + "";
+            label33.Text = error[0, 1] + "";
+            label32.Text = error[0, 2] + "";
+            label31.Text = error[1, 0] + "";
+            label30.Text = error[1, 1] + "";
+            label29.Text = error[1, 2] + "";
+        }
+
+        private void timer_Sensor_Tick(object sender, EventArgs e)
+        {
+            Transform();
+            for(int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    FixInit_Data[i, j].Add(a_AfterTransform[i, j]);
+                }
+            }
+        }
         /*
          * —————————————————————————————————————————数据库传输部分——————————————————————————————————————————
          */
@@ -112,8 +342,8 @@ namespace HostComputerForRail
                         + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
                         + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
                         + ")values(SYSDATETIME(),"
-                        + a[0, 0] + "," + a[0, 1] + "," + a[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
-                        + a[1, 0] + "," + a[1, 1] + "," + a[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
+                        + a_AfterTransform[0, 0] + "," + a_AfterTransform[0, 1] + "," + a_AfterTransform[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
+                        + a_AfterTransform[1, 0] + "," + a_AfterTransform[1, 1] + "," + a_AfterTransform[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
                         + ")";
                     // 建立一个命令
                     SqlCommand sqlCommand = new SqlCommand(sqlDate, mySQL);
@@ -138,8 +368,8 @@ namespace HostComputerForRail
         string[] serialPortName;
         SerialPort SerialPort_Inclinometer1 = new SerialPort();
         SerialPort SerialPort_Inclinometer2 = new SerialPort();
-        double[,] a = new double[2, 3], Angle = new double[2, 3];
-        int serialPortNumber;
+        private double[,] a = new double[2, 3], Angle = new double[2, 3];
+        private int serialPortNumber;
 
         //查询串口并加载
         private void comboBox_Inclinometer_Load()
@@ -395,13 +625,13 @@ namespace HostComputerForRail
          */
         private void chart1_Run()
         {
-            chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(),a[0,1]);
-            chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a[1,1]);
-            chart1.Series[2].Points.AddXY(DateTime.Now.Millisecond.ToString(), a[0,2]);
-            chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a[1,2]);
+            chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0,1]);
+            chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1,1]);
+            chart1.Series[2].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0,2]);
+            chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1,2]);
             chart1.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[0,0]);
             chart1.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[1,0]);
-            if (chart1.Series[0].Points.Count >= 400)
+            if (chart1.Series[0].Points.Count >= 500)
             {
                 chart1.Series[0].Points.RemoveAt(0);
                 chart1.Series[1].Points.RemoveAt(0);
