@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Threading;
@@ -326,6 +322,7 @@ namespace HostComputerForRail
 
         private void SQLconnect()
         {
+            // SQL server
             string connsql = "server=FU-QINGCHEN\\SQLEXPRESS;integrated security=SSPI;database=Test";
             try
             {
@@ -338,7 +335,7 @@ namespace HostComputerForRail
                     var format = "yyyy-MM-dd HH:mm:ss:fffffff";
                     var stringDate = DateTime.Now.ToString(format);
                     var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
-                    sqlDate = "insert Inclination_OriginDate(DateTime,"
+                    sqlDate = "insert Inclination_OriginDate(DateTimes,"
                         + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
                         + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
                         + ")values(SYSDATETIME(),"
@@ -359,6 +356,40 @@ namespace HostComputerForRail
             {
                 toolStripStatusLabel_SQL.Text = "数据库已连接";
             }
+
+            //// Azure SQL
+            //SqlConnectionStringBuilder sqlConnectionStringBuilder_Azure = new SqlConnectionStringBuilder();
+            //sqlConnectionStringBuilder_Azure.DataSource = "mysampleserver.database.chinacloudapi.cn";
+            //sqlConnectionStringBuilder_Azure.UserID = "WHUT";
+            //sqlConnectionStringBuilder_Azure.Password = "0121618380615Fqc";
+            //sqlConnectionStringBuilder_Azure.InitialCatalog = "RailOriginDate";
+            //try
+            //{
+            //    using(SqlConnection sqlConnection = new SqlConnection(sqlConnectionStringBuilder_Azure.ConnectionString))
+            //    {
+            //        sqlConnection.Open();
+            //        var format = "yyyy-MM-dd HH:mm:ss:fffffff";
+            //        var stringDate = DateTime.Now.ToString(format);
+            //        var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
+            //        sqlDate = "insert Inclination_OriginDate(DateTimes,"
+            //            + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
+            //            + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
+            //            + ")values(SYSDATETIME(),"
+            //            + a_AfterTransform[0, 0] + "," + a_AfterTransform[0, 1] + "," + a_AfterTransform[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
+            //            + a_AfterTransform[1, 0] + "," + a_AfterTransform[1, 1] + "," + a_AfterTransform[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
+            //            + ")";
+            //        SqlCommand sqlCommand = new SqlCommand(sqlDate, sqlConnection);
+            //        sqlCommand.ExecuteNonQuery();
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+            //    toolStripStatusLabel_SQL.Text = "错误：" + ex.Message;
+            //}
+            //finally
+            //{
+            //    toolStripStatusLabel_SQL.Text = "数据库已连接";
+            //}
         }
 
         /*
