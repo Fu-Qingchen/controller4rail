@@ -51,3 +51,4 @@ E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\sv\ZedGraph.resource
 E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\tr\ZedGraph.resources.dll
 E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\zh-cn\ZedGraph.resources.dll
 E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\zh-tw\ZedGraph.resources.dll
+E:\GitHub\HostComputerForRail\HostComputerForRail\bin\Debug\HostComputerForRail.exe.config

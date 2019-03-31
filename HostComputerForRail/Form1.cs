@@ -4,14 +4,17 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Globalization;
 using AForge.Video.DirectShow;
-using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.IntegralTransforms;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
+using System.Numerics;
 
 namespace HostComputerForRail
 {
@@ -64,6 +67,7 @@ namespace HostComputerForRail
             {
                 bool_start = true;
                 timer_Main.Start();
+                timer_FFT.Start();
             }
             catch(Exception ex)
             {
@@ -77,6 +81,8 @@ namespace HostComputerForRail
             {
                 bool_start = false;
                 timer_Main.Stop();
+                timer_FFT.Stop();
+                Thread.Sleep(100);
             }catch(Exception ex)
             {
                 toolStripStatusLabel_State.Text = "错误：" + ex.Message;
@@ -331,6 +337,93 @@ namespace HostComputerForRail
             {
                 toolStripStatusLabel_Inclinometer.Text = "错误：" + ex.Message;
             }
+        }
+
+        //频域分析
+        private static int Samples_num = 500;
+        readonly Complex[] sample_Ay1 = new Complex[Samples_num];
+        private Complex[] sample_Ay2 = new Complex[Samples_num];
+        private Complex[] sample_Az1 = new Complex[Samples_num];
+        private Complex[] sample_Az2 = new Complex[Samples_num];
+        private Complex[] sample_θx1 = new Complex[Samples_num];
+        private Complex[] sample_θx2 = new Complex[Samples_num];
+        private int add_num = 0;
+        private double[,] sample_data = new double[6, Samples_num];
+
+        Thread thread_sample;
+        private delegate void delegate_FFT();
+        
+        private void FFT(/*object state*/)
+        {
+            Fourier.Forward(sample_Ay1);
+        }
+
+        private void PlotFftAnalys()
+        {
+            timer_FFT.Stop();
+            for (int i = 0; i < Samples_num; i++)
+            {
+                sample_Ay1[i] = new Complex(sample_data[0, i], 0);
+            }
+            try
+            {
+                FFT();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("" + ex.Message);
+            }
+            BeginInvoke(new delegate_FFT(UIchange_FFT));
+        }
+
+        private void UIchange_FFT()
+        {
+            crtFft.Series["Frequency"].Points.Clear();
+
+            for (int i = 0; i < sample_Ay1.Length / 4; i++)
+            {
+                double mag = (2.0 / Samples_num) * (Math.Abs(Math.Sqrt(Math.Pow(sample_Ay1[i].Real, 2) +
+                                                Math.Pow(sample_Ay1[i].Imaginary, 2))));
+
+                double hzPerSample = 20 / Samples_num;
+
+                crtFft.Series["Frequency"].Points.AddXY(hzPerSample * i, mag);
+            }
+        }
+
+        private void timer_FFT_Tick(object sender, EventArgs e)
+        {
+            if (add_num < Samples_num)
+            {
+                sample_data[0, add_num] = a[0, 1];
+                sample_data[1, add_num] = a[1, 1];
+                sample_data[2, add_num] = a[0, 2];
+                sample_data[3, add_num] = a[1, 2];
+                sample_data[4, add_num] = Angle[0, 0];
+                sample_data[5, add_num] = Angle[1, 0];
+            }
+            else
+            {
+                for(int i = 0; i < Samples_num - 1; i++)
+                {
+                    for(int j = 0; j < 6; j++)
+                    {
+                        sample_data[j, i] = sample_data[j, i + 1];
+                    }
+                    sample_data[0, Samples_num - 1] = a[0, 1];
+                    sample_data[1, Samples_num - 1] = a[1, 1];
+                    sample_data[2, Samples_num - 1] = a[0, 2];
+                    sample_data[3, Samples_num - 1] = a[1, 2];
+                    sample_data[4, Samples_num - 1] = Angle[0, 0];
+                    sample_data[5, Samples_num - 1] = Angle[1, 0];
+                }
+                add_num = 0;
+                
+                thread_sample = new Thread(PlotFftAnalys);
+                thread_sample.IsBackground = true;
+                thread_sample.Start();
+            }
+            add_num += 1;
         }
 
         private void pictureBox_fixSensor_Click(object sender, EventArgs e)
@@ -715,8 +808,7 @@ namespace HostComputerForRail
                     break;
             }
         }
-
-        /*
+               /*
          * ————————————————————————————————————————————实时监控部分————————————————————————————————————————————
          */
 
@@ -745,8 +837,10 @@ namespace HostComputerForRail
         }
 
         /*
-         * ————————————————————————————————————————————UI界面设计————————————————————————————————————————————
+         * ————————————————————————————————————————————实时图表设计————————————————————————————————————————————
          */
+
+        private bool frequency_start = false;
         private void chart1_Run()
         {
             chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0,1]);
@@ -763,8 +857,17 @@ namespace HostComputerForRail
                 chart1.Series[3].Points.RemoveAt(0);
                 chart1.Series[4].Points.RemoveAt(0);
                 chart1.Series[5].Points.RemoveAt(0);
+                frequency_start = true;
+            }
+            if (frequency_start)
+            {
+
             }
         }
+
+        /*
+         * ————————————————————————————————————————————UI界面设计————————————————————————————————————————————
+         */
 
         private void toolStripStatusLabel_ControlCenter_MouseEnter(object sender, EventArgs e)
         {
@@ -861,6 +964,14 @@ namespace HostComputerForRail
         private void timer_System_Tick(object sender, EventArgs e)
         {
             label_SystemTime.Text = DateTime.Now + "";
+        }
+
+        private void pictureBox1_Click_1(object sender, EventArgs e)
+        {
+            thread_sample = new Thread(PlotFftAnalys);
+            thread_sample.IsBackground = true;
+            thread_sample.Start();
+            //PlotFftAnalys();
         }
 
         private void toolStripStatusLabel_DataSolve_Click(object sender, EventArgs e)
