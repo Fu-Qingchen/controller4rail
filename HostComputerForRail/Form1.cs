@@ -55,7 +55,8 @@ namespace HostComputerForRail
                 {
                     toolStripStatusLabel_Camera.Text = "摄像头未连接";
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 toolStripStatusLabel_State.Text = "错误：" + ex.Message;
             }
@@ -69,7 +70,7 @@ namespace HostComputerForRail
                 timer_Main.Start();
                 timer_FFT.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_State.Text = "错误：" + ex.Message;
             }
@@ -83,7 +84,8 @@ namespace HostComputerForRail
                 timer_Main.Stop();
                 timer_FFT.Stop();
                 Thread.Sleep(100);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 toolStripStatusLabel_State.Text = "错误：" + ex.Message;
             }
@@ -135,7 +137,7 @@ namespace HostComputerForRail
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_State.Text = "错误：" + ex.Message;
             }
@@ -147,7 +149,7 @@ namespace HostComputerForRail
 
         private VideoCapture VideoCapture_ImageRecognize;
         private Mat frame;
-        private int index_ImageRecognize = 1;
+        private int index_ImageRecognize = 2;
 
         private void VideoCapture_ImageRecognize_Load()
         {
@@ -158,7 +160,7 @@ namespace HostComputerForRail
                 frame = new Mat();
                 VideoCapture_ImageRecognize.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Camera.Text = "错误：" + ex.Message;
             }
@@ -173,15 +175,17 @@ namespace HostComputerForRail
                     VideoCapture_ImageRecognize.Retrieve(frame, 0);
                     Image<Bgr, Byte> img = frame.ToImage<Bgr, Byte>();
                     Image<Gray, Byte> grayImage = img.Convert<Gray, Byte>();
-                    Image<Gray, Byte> cannyGray = grayImage.Canny(70, 200);
-                    //cannyGray = cannyGray.Not();
-                    //Image<Bgr, Byte> finalImage = img.Add(img,cannyGray);
-                    //imageBox1.Image = finalImage;
-                    imageBox1.Image = cannyGray;
+                    Image<Gray, Byte> addImage = grayImage.ThresholdBinary(new Gray(65), new Gray(255));
+                    Image<Gray, Byte> cannyGray = grayImage.Canny(90, 150);
+                    cannyGray = cannyGray.Not();
+                    Image<Bgr, Byte> finalImage = img.Add(img,cannyGray);
+                    imageBox1.Image = finalImage;
+                    //imageBox1.Image = cannyGray;
+                    //imageBox1.Image = frame;
                     //TODO: 如果 cannyGray 出现白色，将时间记录在数据库中
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Camera.Text = "错误：" + ex.Message;
             }
@@ -271,13 +275,11 @@ namespace HostComputerForRail
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Inclinometer.Text = "错误：" + ex.Message;
             }
         }
-
-        
 
         private void Integration()
         {
@@ -309,7 +311,7 @@ namespace HostComputerForRail
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Inclinometer.Text = "错误：" + ex.Message;
             }
@@ -333,14 +335,14 @@ namespace HostComputerForRail
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Inclinometer.Text = "错误：" + ex.Message;
             }
         }
 
         //频域分析
-        private static int Samples_num = 500;
+        private static int Samples_num = 250;
         readonly Complex[] sample_Ay1 = new Complex[Samples_num];
         private Complex[] sample_Ay2 = new Complex[Samples_num];
         private Complex[] sample_Az1 = new Complex[Samples_num];
@@ -352,7 +354,7 @@ namespace HostComputerForRail
 
         Thread thread_sample;
         private delegate void delegate_FFT();
-        
+
         private void FFT(/*object state*/)
         {
             Fourier.Forward(sample_Ay1);
@@ -360,20 +362,38 @@ namespace HostComputerForRail
 
         private void PlotFftAnalys()
         {
+            BeginInvoke(new delegate_FFT(label3_Start));
             timer_FFT.Stop();
             for (int i = 0; i < Samples_num; i++)
             {
                 sample_Ay1[i] = new Complex(sample_data[0, i], 0);
             }
+            BeginInvoke(new delegate_FFT(label3_Doing));
             try
             {
                 FFT();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("" + ex.Message);
             }
+            BeginInvoke(new delegate_FFT(label3_Finish));
             BeginInvoke(new delegate_FFT(UIchange_FFT));
+        }
+
+        private void label3_Start()
+        {
+            label3.Text = "初始化中";
+        }
+
+        private void label3_Doing()
+        {
+            label3.Text = "FFT计算中";
+        }
+
+        private void label3_Finish()
+        {
+            label3.Visible = false;
         }
 
         private void UIchange_FFT()
@@ -404,9 +424,9 @@ namespace HostComputerForRail
             }
             else
             {
-                for(int i = 0; i < Samples_num - 1; i++)
+                for (int i = 0; i < Samples_num - 1; i++)
                 {
-                    for(int j = 0; j < 6; j++)
+                    for (int j = 0; j < 6; j++)
                     {
                         sample_data[j, i] = sample_data[j, i + 1];
                     }
@@ -418,7 +438,7 @@ namespace HostComputerForRail
                     sample_data[5, Samples_num - 1] = Angle[1, 0];
                 }
                 add_num = 0;
-                
+                label3.Text = "正在处理";
                 thread_sample = new Thread(PlotFftAnalys);
                 thread_sample.IsBackground = true;
                 thread_sample.Start();
@@ -446,7 +466,7 @@ namespace HostComputerForRail
                 label_Inclinometer2_THETAy.Text = "倾角仪正在校准";
                 label_Inclinometer2_THETAz.Text = "倾角仪正在校准";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Inclinometer.Text = "错误：" + ex.Message;
             }
@@ -491,11 +511,11 @@ namespace HostComputerForRail
                 label_Inclinometer2_THETAy.Text = "校准完成";
                 label_Inclinometer2_THETAz.Text = "校准完成";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Inclinometer.Text = "错误：" + ex.Message;
             }
-            
+
         }
 
         private void timer_Sensor_Tick(object sender, EventArgs e)
@@ -511,10 +531,19 @@ namespace HostComputerForRail
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Inclinometer.Text = "错误：" + ex.Message;
             }
+        }
+
+        private void pictureBox1_Click_1(object sender, EventArgs e)
+        {
+            label3.Text = "正在处理";
+            thread_sample = new Thread(PlotFftAnalys);
+            thread_sample.IsBackground = true;
+            thread_sample.Start();
+            //PlotFftAnalys();
         }
         /*
          * —————————————————————————————————————————数据库传输部分——————————————————————————————————————————
@@ -558,39 +587,39 @@ namespace HostComputerForRail
                 toolStripStatusLabel_SQL.Text = "数据库已连接";
             }
 
-            //// Azure SQL
-            //SqlConnectionStringBuilder sqlConnectionStringBuilder_Azure = new SqlConnectionStringBuilder();
-            //sqlConnectionStringBuilder_Azure.DataSource = "mysampleserver.database.chinacloudapi.cn";
-            //sqlConnectionStringBuilder_Azure.UserID = "WHUT";
-            //sqlConnectionStringBuilder_Azure.Password = "0121618380615Fqc";
-            //sqlConnectionStringBuilder_Azure.InitialCatalog = "RailOriginDate";
-            //try
-            //{
-            //    using(SqlConnection sqlConnection = new SqlConnection(sqlConnectionStringBuilder_Azure.ConnectionString))
-            //    {
-            //        sqlConnection.Open();
-            //        var format = "yyyy-MM-dd HH:mm:ss:fffffff";
-            //        var stringDate = DateTime.Now.ToString(format);
-            //        var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
-            //        sqlDate = "insert Inclination_OriginDate(DateTimes,"
-            //            + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
-            //            + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
-            //            + ")values(SYSDATETIME(),"
-            //            + a_AfterTransform[0, 0] + "," + a_AfterTransform[0, 1] + "," + a_AfterTransform[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
-            //            + a_AfterTransform[1, 0] + "," + a_AfterTransform[1, 1] + "," + a_AfterTransform[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
-            //            + ")";
-            //        SqlCommand sqlCommand = new SqlCommand(sqlDate, sqlConnection);
-            //        sqlCommand.ExecuteNonQuery();
-            //    }
-            //}
-            //catch(Exception ex)
-            //{
-            //    toolStripStatusLabel_SQL.Text = "错误：" + ex.Message;
-            //}
-            //finally
-            //{
-            //    toolStripStatusLabel_SQL.Text = "数据库已连接";
-            //}
+            // Azure SQL
+            SqlConnectionStringBuilder sqlConnectionStringBuilder_Azure = new SqlConnectionStringBuilder();
+            sqlConnectionStringBuilder_Azure.DataSource = "mysampleserver.database.chinacloudapi.cn";
+            sqlConnectionStringBuilder_Azure.UserID = "WHUT";
+            sqlConnectionStringBuilder_Azure.Password = "0121618380615Fqc";
+            sqlConnectionStringBuilder_Azure.InitialCatalog = "RailOriginDate";
+            try
+            {
+                using(SqlConnection sqlConnection = new SqlConnection(sqlConnectionStringBuilder_Azure.ConnectionString))
+                {
+                    sqlConnection.Open();
+                    var format = "yyyy-MM-dd HH:mm:ss:fffffff";
+                    var stringDate = DateTime.Now.ToString(format);
+                    var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
+                    sqlDate = "insert Inclination_OriginDate(DateTimes,"
+                        + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
+                        + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
+                        + ")values(SYSDATETIME(),"
+                        + a_AfterTransform[0, 0] + "," + a_AfterTransform[0, 1] + "," + a_AfterTransform[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
+                        + a_AfterTransform[1, 0] + "," + a_AfterTransform[1, 1] + "," + a_AfterTransform[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
+                        + ")";
+                    SqlCommand sqlCommand = new SqlCommand(sqlDate, sqlConnection);
+                    sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch(Exception ex)
+            {
+                toolStripStatusLabel_SQL.Text = "错误：" + ex.Message;
+            }
+            finally
+            {
+                toolStripStatusLabel_SQL.Text = "数据库已连接";
+            }
         }
 
         /*
@@ -607,13 +636,13 @@ namespace HostComputerForRail
         private void comboBox_Inclinometer_Load()
         {
             serialPortName = SerialPort.GetPortNames();
-            if(serialPortName == null)
+            if (serialPortName == null)
             {
                 toolStripStatusLabel_Inclinometer.Text = "无串口连接";
             }
             else
             {
-                foreach(string name in serialPortName)
+                foreach (string name in serialPortName)
                 {
                     comboBox_Inclinometer1.Items.Add(name);
                     comboBox_Inclinometer1.SelectedIndex = -1;
@@ -702,9 +731,9 @@ namespace HostComputerForRail
                 }
                 if (((byteTemp[0] + byteTemp[1] + byteTemp[2] + byteTemp[3] + byteTemp[4] + byteTemp[5] + byteTemp[6] + byteTemp[7] + byteTemp[8] + byteTemp[9]) & 0xff) == byteTemp[10])
                     this.Invoke(Update, byteTemp);
-                    for (int i = 11; i < usRxLength1; i++) RxBuffer1[i - 11] = RxBuffer1[i];
-                    usRxLength1 -= 11;
-                }
+                for (int i = 11; i < usRxLength1; i++) RxBuffer1[i - 11] = RxBuffer1[i];
+                usRxLength1 -= 11;
+            }
             Thread.Sleep(10);
         }
         private void SerialPort_DataReceived2(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
@@ -750,9 +779,9 @@ namespace HostComputerForRail
                     Data[1] = Data[1] / 32768.0 * 16;
                     Data[2] = Data[2] / 32768.0 * 16;
 
-                    a[serialPortNumber,0] = Data[0];
-                    a[serialPortNumber,1] = Data[1];
-                    a[serialPortNumber,2] = Data[2];
+                    a[serialPortNumber, 0] = Data[0];
+                    a[serialPortNumber, 1] = Data[1];
+                    a[serialPortNumber, 2] = Data[2];
                     if ((TimeElapse - LastTime1[1]) < 0.1) return;
                     LastTime1[1] = TimeElapse;
                     break;
@@ -760,9 +789,9 @@ namespace HostComputerForRail
                     Data[0] = Data[0] / 32768.0 * 180;
                     Data[1] = Data[1] / 32768.0 * 180;
                     Data[2] = Data[2] / 32768.0 * 180;
-                    Angle[serialPortNumber,0] = Data[0];
-                    Angle[serialPortNumber,1] = Data[1];
-                    Angle[serialPortNumber,2] = Data[2];
+                    Angle[serialPortNumber, 0] = Data[0];
+                    Angle[serialPortNumber, 1] = Data[1];
+                    Angle[serialPortNumber, 2] = Data[2];
                     if ((TimeElapse - LastTime1[3]) < 0.1) return;
                     LastTime1[3] = TimeElapse;
                     break;
@@ -788,9 +817,9 @@ namespace HostComputerForRail
                     Data[1] = Data[1] / 32768.0 * 16;
                     Data[2] = Data[2] / 32768.0 * 16;
 
-                    a[serialPortNumber,0] = Data[0];
-                    a[serialPortNumber,1] = Data[1];
-                    a[serialPortNumber,2] = Data[2];
+                    a[serialPortNumber, 0] = Data[0];
+                    a[serialPortNumber, 1] = Data[1];
+                    a[serialPortNumber, 2] = Data[2];
                     if ((TimeElapse - LastTime2[1]) < 0.1) return;
                     LastTime2[1] = TimeElapse;
                     break;
@@ -798,9 +827,9 @@ namespace HostComputerForRail
                     Data[0] = Data[0] / 32768.0 * 180;
                     Data[1] = Data[1] / 32768.0 * 180;
                     Data[2] = Data[2] / 32768.0 * 180;
-                    Angle[serialPortNumber,0] = Data[0];
-                    Angle[serialPortNumber,1] = Data[1];
-                    Angle[serialPortNumber,2] = Data[2];
+                    Angle[serialPortNumber, 0] = Data[0];
+                    Angle[serialPortNumber, 1] = Data[1];
+                    Angle[serialPortNumber, 2] = Data[2];
                     if ((TimeElapse - LastTime2[3]) < 0.1) return;
                     LastTime2[3] = TimeElapse;
                     break;
@@ -808,9 +837,9 @@ namespace HostComputerForRail
                     break;
             }
         }
-               /*
-         * ————————————————————————————————————————————实时监控部分————————————————————————————————————————————
-         */
+        /*
+  * ————————————————————————————————————————————实时监控部分————————————————————————————————————————————
+  */
 
         private bool bool_haveCamera;    //判断是否有可用的摄像头
         private FilterInfoCollection VideoInputDeviceCollection;    //调出所有可用设备
@@ -826,7 +855,8 @@ namespace HostComputerForRail
                 videoSourcePlayer_MonitorCamera.VideoSource = VideoCaptureDevice_MonitorCamera;
                 videoSourcePlayer_MonitorCamera.Start();
                 toolStripStatusLabel_Camera.Text = "摄像头已连接";
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 toolStripStatusLabel_Camera.Text = "错误：" + ex.Message;
             }
@@ -843,12 +873,12 @@ namespace HostComputerForRail
         private bool frequency_start = false;
         private void chart1_Run()
         {
-            chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0,1]);
-            chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1,1]);
-            chart1.Series[2].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0,2]);
-            chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1,2]);
-            chart1.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[0,0]);
-            chart1.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[1,0]);
+            chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 1]);
+            chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 1]);
+            chart1.Series[2].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 2]);
+            chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 2]);
+            chart1.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[0, 0]);
+            chart1.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[1, 0]);
             if (chart1.Series[0].Points.Count >= 500)
             {
                 chart1.Series[0].Points.RemoveAt(0);
@@ -871,7 +901,7 @@ namespace HostComputerForRail
 
         private void toolStripStatusLabel_ControlCenter_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel_ControlCenter.ForeColor = 
+            toolStripStatusLabel_ControlCenter.ForeColor =
                 System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
         }
 
@@ -917,7 +947,7 @@ namespace HostComputerForRail
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
-        { 
+        {
             this.WindowState = FormWindowState.Minimized;
         }
 
@@ -933,7 +963,7 @@ namespace HostComputerForRail
 
         private void toolStripStatusLabel3_Click(object sender, EventArgs e)
         {
-            toolStripStatusLabel3.ForeColor = 
+            toolStripStatusLabel3.ForeColor =
                 System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             toolStripStatusLabel7.ForeColor =
                 System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
@@ -964,14 +994,6 @@ namespace HostComputerForRail
         private void timer_System_Tick(object sender, EventArgs e)
         {
             label_SystemTime.Text = DateTime.Now + "";
-        }
-
-        private void pictureBox1_Click_1(object sender, EventArgs e)
-        {
-            thread_sample = new Thread(PlotFftAnalys);
-            thread_sample.IsBackground = true;
-            thread_sample.Start();
-            //PlotFftAnalys();
         }
 
         private void toolStripStatusLabel_DataSolve_Click(object sender, EventArgs e)
