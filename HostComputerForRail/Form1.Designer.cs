@@ -72,6 +72,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.imageBox1 = new Emgu.CV.UI.ImageBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.crtFft = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -126,7 +127,6 @@
             this.timer_Sensor = new System.Windows.Forms.Timer(this.components);
             this.timer_FixInit = new System.Windows.Forms.Timer(this.components);
             this.timer_FFT = new System.Windows.Forms.Timer(this.components);
-            this.label3 = new System.Windows.Forms.Label();
             this.statusStrip_Bottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Logo)).BeginInit();
             this.statusStrip_Left.SuspendLayout();
@@ -458,6 +458,16 @@
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "频域状态";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(255, 191);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(191, 54);
+            this.label3.TabIndex = 26;
+            this.label3.Text = "等待处理";
             // 
             // pictureBox1
             // 
@@ -1152,7 +1162,6 @@
             // 
             // timer_Sensor
             // 
-            this.timer_Sensor.Interval = 50;
             this.timer_Sensor.Tick += new System.EventHandler(this.timer_Sensor_Tick);
             // 
             // timer_FixInit
@@ -1163,16 +1172,6 @@
             // timer_FFT
             // 
             this.timer_FFT.Tick += new System.EventHandler(this.timer_FFT_Tick);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(255, 191);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(191, 54);
-            this.label3.TabIndex = 26;
-            this.label3.Text = "等待处理";
             // 
             // Form1
             // 

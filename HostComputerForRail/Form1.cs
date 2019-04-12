@@ -43,8 +43,12 @@ namespace HostComputerForRail
 
                 //倾角仪传输部分
                 comboBox_Inclinometer_Load();
-                SerialPort_Inclinometer1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort_DataReceived1);
-                SerialPort_Inclinometer2.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort_DataReceived2);
+                Thread Thread_Serial1 = new Thread(new ThreadStart(getThreadTarget1));
+                Thread Thread_Serial2 = new Thread(new ThreadStart(getThreadTarget2));
+                Thread_Serial1.IsBackground = true;
+                Thread_Serial2.IsBackground = true;
+                Thread_Serial1.Start();
+                Thread_Serial2.Start();
 
                 //底栏状态调整
                 if (bool_haveCamera)
@@ -83,7 +87,7 @@ namespace HostComputerForRail
                 bool_start = false;
                 timer_Main.Stop();
                 timer_FFT.Stop();
-                Thread.Sleep(100);
+                Thread.Sleep(50);
             }
             catch (Exception ex)
             {
@@ -176,10 +180,10 @@ namespace HostComputerForRail
                     Image<Bgr, Byte> img = frame.ToImage<Bgr, Byte>();
                     Image<Gray, Byte> grayImage = img.Convert<Gray, Byte>();
                     Image<Gray, Byte> addImage = grayImage.ThresholdBinary(new Gray(65), new Gray(255));
-                    Image<Gray, Byte> cannyGray = grayImage.Canny(90, 150);
-                    cannyGray = cannyGray.Not();
-                    Image<Bgr, Byte> finalImage = img.Add(img,cannyGray);
-                    imageBox1.Image = finalImage;
+                    Image<Gray, Byte> cannyGray = grayImage.Canny(70, 200);
+                    //cannyGray = cannyGray.Not();
+                    //Image<Bgr, Byte> finalImage = img.Add(img,cannyGray);
+                    imageBox1.Image = cannyGray;
                     //imageBox1.Image = cannyGray;
                     //imageBox1.Image = frame;
                     //TODO: 如果 cannyGray 出现白色，将时间记录在数据库中
@@ -342,22 +346,17 @@ namespace HostComputerForRail
         }
 
         //频域分析
-        private static int Samples_num = 250;
+        private static int Samples_num = 50;
         readonly Complex[] sample_Ay1 = new Complex[Samples_num];
-        private Complex[] sample_Ay2 = new Complex[Samples_num];
-        private Complex[] sample_Az1 = new Complex[Samples_num];
-        private Complex[] sample_Az2 = new Complex[Samples_num];
-        private Complex[] sample_θx1 = new Complex[Samples_num];
-        private Complex[] sample_θx2 = new Complex[Samples_num];
         private int add_num = 0;
         private double[,] sample_data = new double[6, Samples_num];
 
         Thread thread_sample;
         private delegate void delegate_FFT();
 
-        private void FFT(/*object state*/)
+        private void FFT()
         {
-            Fourier.Forward(sample_Ay1);
+            Fourier.Forward(sample_Ay1,default);
         }
 
         private void PlotFftAnalys()
@@ -379,6 +378,7 @@ namespace HostComputerForRail
             }
             BeginInvoke(new delegate_FFT(label3_Finish));
             BeginInvoke(new delegate_FFT(UIchange_FFT));
+            Thread.Sleep(99);
         }
 
         private void label3_Start()
@@ -588,38 +588,38 @@ namespace HostComputerForRail
             }
 
             // Azure SQL
-            SqlConnectionStringBuilder sqlConnectionStringBuilder_Azure = new SqlConnectionStringBuilder();
-            sqlConnectionStringBuilder_Azure.DataSource = "mysampleserver.database.chinacloudapi.cn";
-            sqlConnectionStringBuilder_Azure.UserID = "WHUT";
-            sqlConnectionStringBuilder_Azure.Password = "0121618380615Fqc";
-            sqlConnectionStringBuilder_Azure.InitialCatalog = "RailOriginDate";
-            try
-            {
-                using(SqlConnection sqlConnection = new SqlConnection(sqlConnectionStringBuilder_Azure.ConnectionString))
-                {
-                    sqlConnection.Open();
-                    var format = "yyyy-MM-dd HH:mm:ss:fffffff";
-                    var stringDate = DateTime.Now.ToString(format);
-                    var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
-                    sqlDate = "insert Inclination_OriginDate(DateTimes,"
-                        + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
-                        + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
-                        + ")values(SYSDATETIME(),"
-                        + a_AfterTransform[0, 0] + "," + a_AfterTransform[0, 1] + "," + a_AfterTransform[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
-                        + a_AfterTransform[1, 0] + "," + a_AfterTransform[1, 1] + "," + a_AfterTransform[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
-                        + ")";
-                    SqlCommand sqlCommand = new SqlCommand(sqlDate, sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
-                }
-            }
-            catch(Exception ex)
-            {
-                toolStripStatusLabel_SQL.Text = "错误：" + ex.Message;
-            }
-            finally
-            {
-                toolStripStatusLabel_SQL.Text = "数据库已连接";
-            }
+            //SqlConnectionStringBuilder sqlConnectionStringBuilder_Azure = new SqlConnectionStringBuilder();
+            //sqlConnectionStringBuilder_Azure.DataSource = "mysampleserver.database.chinacloudapi.cn";
+            //sqlConnectionStringBuilder_Azure.UserID = "WHUT";
+            //sqlConnectionStringBuilder_Azure.Password = "0121618380615Fqc";
+            //sqlConnectionStringBuilder_Azure.InitialCatalog = "RailOriginDate";
+            //try
+            //{
+            //    using(SqlConnection sqlConnection = new SqlConnection(sqlConnectionStringBuilder_Azure.ConnectionString))
+            //    {
+            //        sqlConnection.Open();
+            //        var format = "yyyy-MM-dd HH:mm:ss:fffffff";
+            //        var stringDate = DateTime.Now.ToString(format);
+            //        var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
+            //        sqlDate = "insert Inclination_OriginDate(DateTimes,"
+            //            + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
+            //            + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
+            //            + ")values(SYSDATETIME(),"
+            //            + a_AfterTransform[0, 0] + "," + a_AfterTransform[0, 1] + "," + a_AfterTransform[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
+            //            + a_AfterTransform[1, 0] + "," + a_AfterTransform[1, 1] + "," + a_AfterTransform[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
+            //            + ")";
+            //        SqlCommand sqlCommand = new SqlCommand(sqlDate, sqlConnection);
+            //        sqlCommand.ExecuteNonQuery();
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+            //    toolStripStatusLabel_SQL.Text = "错误：" + ex.Message;
+            //}
+            //finally
+            //{
+            //    toolStripStatusLabel_SQL.Text = "数据库已连接";
+            //}
         }
 
         /*
@@ -699,6 +699,7 @@ namespace HostComputerForRail
 
             serialPort_Close(SerialPort_Inclinometer2);
             SerialPort_Inclinometer2.Open();
+            Thread.Sleep(9);
             //timer_Main.Start();
         }
 
@@ -712,6 +713,16 @@ namespace HostComputerForRail
         private double[] LastTime1 = new double[10];
         private double[] LastTime2 = new double[10];
 
+        private void getThreadTarget1()
+        {
+            SerialPort_Inclinometer1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort_DataReceived1);
+        }
+
+        private void getThreadTarget2()
+        {
+            SerialPort_Inclinometer2.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort_DataReceived2);
+        }
+
         //接收数据
         private void SerialPort_DataReceived1(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
@@ -721,7 +732,7 @@ namespace HostComputerForRail
             usRxLength1 += usLength;
             while (usRxLength1 >= 11)
             {
-                UpdateData1 Update = new UpdateData1(DecodeData1);
+                UpdateData1 Update1 = new UpdateData1(DecodeData1);
                 RxBuffer1.CopyTo(byteTemp, 0);
                 if (!((byteTemp[0] == 0x55) & ((byteTemp[1] & 0x50) == 0x50)))
                 {
@@ -730,11 +741,12 @@ namespace HostComputerForRail
                     continue;
                 }
                 if (((byteTemp[0] + byteTemp[1] + byteTemp[2] + byteTemp[3] + byteTemp[4] + byteTemp[5] + byteTemp[6] + byteTemp[7] + byteTemp[8] + byteTemp[9]) & 0xff) == byteTemp[10])
-                    this.Invoke(Update, byteTemp);
+                    this.Invoke(Update1, byteTemp);
                 for (int i = 11; i < usRxLength1; i++) RxBuffer1[i - 11] = RxBuffer1[i];
                 usRxLength1 -= 11;
+                Thread.Sleep(10);
             }
-            Thread.Sleep(10);
+            Thread.Sleep(50);
         }
         private void SerialPort_DataReceived2(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
@@ -756,8 +768,9 @@ namespace HostComputerForRail
                     this.Invoke(Update2, byteTemp);
                 for (int i = 11; i < usRxLength2; i++) RxBuffer2[i - 11] = RxBuffer2[i];
                 usRxLength2 -= 11;
+                Thread.Sleep(9);
             }
-            Thread.Sleep(10);
+            Thread.Sleep(49);
         }
 
         //解码数据
@@ -837,7 +850,8 @@ namespace HostComputerForRail
                     break;
             }
         }
-        /*
+
+ /*
   * ————————————————————————————————————————————实时监控部分————————————————————————————————————————————
   */
 
@@ -851,7 +865,7 @@ namespace HostComputerForRail
             {
                 VideoInputDeviceCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
                 VideoCaptureDevice_MonitorCamera = new VideoCaptureDevice
-                        (VideoInputDeviceCollection[1].MonikerString);
+                        (VideoInputDeviceCollection[2].MonikerString);
                 videoSourcePlayer_MonitorCamera.VideoSource = VideoCaptureDevice_MonitorCamera;
                 videoSourcePlayer_MonitorCamera.Start();
                 toolStripStatusLabel_Camera.Text = "摄像头已连接";
@@ -898,7 +912,6 @@ namespace HostComputerForRail
         /*
          * ————————————————————————————————————————————UI界面设计————————————————————————————————————————————
          */
-
         private void toolStripStatusLabel_ControlCenter_MouseEnter(object sender, EventArgs e)
         {
             toolStripStatusLabel_ControlCenter.ForeColor =
