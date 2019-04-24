@@ -16,13 +16,13 @@ using CefSharp.WinForms;
 
 namespace HostComputerForRail
 {
-    public partial class Form1 : Form
+    public partial class Form2 : Form
     {
         ChromiumWebBrowser WebBrowser;
         private DateTime TimeStart = DateTime.Now;
         bool bool_start = false;
 
-        public Form1()
+        public Form2()
         {
             InitializeComponent();
         }
@@ -31,7 +31,7 @@ namespace HostComputerForRail
         {
             try
             {
-                Theme_comboBox1.SelectedIndex = 0;
+                Theme_comboBox1.SelectedIndex = 1;
 
                 //图像识别部分
                 VideoCapture_ImageRecognize_Load();
@@ -989,21 +989,9 @@ namespace HostComputerForRail
 
         private void Panel1_Paint(object sender, PaintEventArgs e)
         {
-            WebBrowser = new ChromiumWebBrowser("file:///C:/Users/Administrator/Desktop/Dark.html");
+            WebBrowser = new ChromiumWebBrowser("file:///C:/Users/Administrator/Desktop/Light.html");
             WebBrowser.Dock = DockStyle.Fill;
             panel1.Controls.Add(WebBrowser);
-        }
-
-        private void Theme_comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if(Theme_comboBox1.SelectedIndex == 1)//浅色主题
-            {
-                
-            }
-            else//暗色主题
-            {
-
-            }
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
