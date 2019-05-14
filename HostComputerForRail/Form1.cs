@@ -31,7 +31,7 @@ namespace HostComputerForRail
         {
             try
             {
-                Theme_comboBox1.SelectedIndex = 0;
+                //Theme_comboBox1.SelectedIndex = 0;
 
                 //图像识别部分
                 VideoCapture_ImageRecognize_Load();
@@ -131,9 +131,9 @@ namespace HostComputerForRail
                     label_Inclinometer2_THETAz.Text = Angle[1, 2].ToString("F6");
                     //TODO: 更改 label_IncrementalTime 的计算逻辑
                     label_IncrementalTime.Text = (DateTime.Now - TimeStart).TotalMilliseconds / 1000 + "";
-                    if (!((a[0, 0] == 0 && a[0, 1] == 0 && a[0, 2] == 0 && Angle[0, 0] == 0 && Angle[0, 1] == 0 && Angle[0, 2] == 0) ||
-                        (a[1, 0] == 0 && a[1, 1] == 0 && a[1, 2] == 0 && Angle[1, 0] == 0 && Angle[1, 1] == 0 && Angle[1, 2] == 0)))
-                    {
+                    //if (!((a[0, 0] == 0 && a[0, 1] == 0 && a[0, 2] == 0 && Angle[0, 0] == 0 && Angle[0, 1] == 0 && Angle[0, 2] == 0) ||
+                    //    (a[1, 0] == 0 && a[1, 1] == 0 && a[1, 2] == 0 && Angle[1, 0] == 0 && Angle[1, 1] == 0 && Angle[1, 2] == 0)))
+                    //{
                         chart1_Run();
                         chart2_Run();
                         chart3_Run();
@@ -142,7 +142,7 @@ namespace HostComputerForRail
                             System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
                         SQLconnect();
                         //TODO: 改变toolStripStatusLabel_State.Image
-                    }
+                    //}
                 }
             }
             catch (Exception ex)
@@ -151,13 +151,10 @@ namespace HostComputerForRail
             }
         }
 
-        /*
-         * —————————————————————————————————————————图像识别程序段——————————————————————————————————————————
-         */
-
+        #region 图像识别程序段
         private VideoCapture VideoCapture_ImageRecognize;
         private Mat frame;
-        private int index_ImageRecognize = 1;
+        private int index_ImageRecognize = 3;
 
         private void VideoCapture_ImageRecognize_Load()
         {
@@ -185,7 +182,7 @@ namespace HostComputerForRail
                     imageBox1.Image = img;
                     Image<Gray, Byte> grayImage = img.Convert<Gray, Byte>();
                     imageBox2.Image = grayImage;
-                    Image<Gray, Byte> addImage = grayImage.ThresholdBinary(new Gray(65), new Gray(255));
+                    Image<Gray, Byte> addImage = grayImage.ThresholdBinary(new Gray(80), new Gray(255));
                     imageBox3.Image = addImage;
                     Image<Gray, Byte> cannyGray = grayImage.Canny(70, 200);
                     imageBox4.Image = cannyGray;
@@ -202,10 +199,9 @@ namespace HostComputerForRail
                 toolStripStatusLabel_Camera.Text = "错误：" + ex.Message;
             }
         }
+        #endregion
 
-        /*
-         * —————————————————————————————————————————不平顺数据处理——————————————————————————————————————————
-         */
+        #region 不平顺数据处理
         private double[,] a_AfterTransform = new double[2, 3];
         private double[,] a_AfterTransform_Before = new double[2, 3];
         private double[,] velocity = new double[2, 3];
@@ -553,9 +549,9 @@ namespace HostComputerForRail
             thread_sample.Start();
             //PlotFftAnalys();
         }
-        /*
-         * —————————————————————————————————————————数据库传输部分——————————————————————————————————————————
-         */
+        #endregion
+
+        #region 数据库传输部分
         private string sqlDate;
 
         private void SQLconnect()
@@ -629,10 +625,9 @@ namespace HostComputerForRail
             //    toolStripStatusLabel_SQL.Text = "数据库已连接";
             //}
         }
+        #endregion
 
-        /*
-         * —————————————————————————————————————————倾角仪传输部分——————————————————————————————————————————
-         */
+        #region 倾角仪传输部分
         private bool bool_Inclinometer1 = false, bool_Inclinometer2 = false;
         string[] serialPortName;
         SerialPort SerialPort_Inclinometer1 = new SerialPort();
@@ -752,9 +747,9 @@ namespace HostComputerForRail
                     this.Invoke(Update1, byteTemp);
                 for (int i = 11; i < usRxLength1; i++) RxBuffer1[i - 11] = RxBuffer1[i];
                 usRxLength1 -= 11;
-                Thread.Sleep(10);
+                //Thread.Sleep(7);
             }
-            Thread.Sleep(50);
+            //Thread.Sleep(29);
         }
         private void SerialPort_DataReceived2(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
@@ -776,9 +771,9 @@ namespace HostComputerForRail
                     this.Invoke(Update2, byteTemp);
                 for (int i = 11; i < usRxLength2; i++) RxBuffer2[i - 11] = RxBuffer2[i];
                 usRxLength2 -= 11;
-                Thread.Sleep(9);
+                //Thread.Sleep(9);
             }
-            Thread.Sleep(49);
+            //Thread.Sleep(30);
         }
 
         //解码数据
@@ -858,11 +853,9 @@ namespace HostComputerForRail
                     break;
             }
         }
+        #endregion
 
- /*
-  * ————————————————————————————————————————————实时监控部分————————————————————————————————————————————
-  */
-
+        #region 实时监控部分
         private bool bool_haveCamera;    //判断是否有可用的摄像头
         private FilterInfoCollection VideoInputDeviceCollection;    //调出所有可用设备
         private VideoCaptureDevice VideoCaptureDevice_MonitorCamera;  //视频源
@@ -873,7 +866,7 @@ namespace HostComputerForRail
             {
                 VideoInputDeviceCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
                 VideoCaptureDevice_MonitorCamera = new VideoCaptureDevice
-                        (VideoInputDeviceCollection[2].MonikerString);
+                        (VideoInputDeviceCollection[3].MonikerString);
                 videoSourcePlayer_MonitorCamera.VideoSource = VideoCaptureDevice_MonitorCamera;
                 videoSourcePlayer_MonitorCamera.Start();
                 toolStripStatusLabel_Camera.Text = "摄像头已连接";
@@ -887,11 +880,9 @@ namespace HostComputerForRail
                 bool_haveCamera = true;
             }
         }
+        #endregion
 
-        /*
-         * ————————————————————————————————————————————实时图表设计————————————————————————————————————————————
-         */
-
+        #region 实时图表设计
         private bool frequency_start = false;
         private void chart1_Run()
         {
@@ -921,10 +912,10 @@ namespace HostComputerForRail
             chart2.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 2]);
             //chart1.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[0, 0]);
             //chart1.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[1, 0]);
-            if (chart2.Series[0].Points.Count >= 500)
+            if (chart2.Series[2].Points.Count >= 500)
             {
-                //chart1.Series[0].Points.RemoveAt(0);
-                //chart1.Series[1].Points.RemoveAt(0);
+                //chart2.Series[0].Points.RemoveAt(0);
+                //chart2.Series[1].Points.RemoveAt(0);
                 chart2.Series[2].Points.RemoveAt(0);
                 chart2.Series[3].Points.RemoveAt(0);
                 //chart1.Series[4].Points.RemoveAt(0);
@@ -941,10 +932,10 @@ namespace HostComputerForRail
             //chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 2]);
             chart3.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 0]);
             chart3.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 0]);
-            if (chart3.Series[0].Points.Count >= 500)
+            if (chart3.Series[4].Points.Count >= 500)
             {
-                //chart1.Series[0].Points.RemoveAt(0);
-                //chart1.Series[1].Points.RemoveAt(0);
+                //chart3.Series[0].Points.RemoveAt(0);
+                //chart3.Series[1].Points.RemoveAt(0);
                 //chart1.Series[2].Points.RemoveAt(0);
                 //chart1.Series[3].Points.RemoveAt(0);
                 chart3.Series[4].Points.RemoveAt(0);
@@ -961,7 +952,7 @@ namespace HostComputerForRail
             //chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 2]);
             chart6.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[0, 0]);
             chart6.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[1, 0]);
-            if (chart6.Series[0].Points.Count >= 500)
+            if (chart6.Series[4].Points.Count >= 500)
             {
                 //chart1.Series[0].Points.RemoveAt(0);
                 //chart1.Series[1].Points.RemoveAt(0);
@@ -972,11 +963,9 @@ namespace HostComputerForRail
                 frequency_start = true;
             }
         }
+        #endregion 
 
-        /*
-         * ————————————————————————————————————————————UI界面设计————————————————————————————————————————————
-         */
-
+        #region UI界面设计
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             System.Environment.Exit(0);
@@ -994,18 +983,6 @@ namespace HostComputerForRail
             panel1.Controls.Add(WebBrowser);
         }
 
-        private void Theme_comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if(Theme_comboBox1.SelectedIndex == 1)//浅色主题
-            {
-                
-            }
-            else//暗色主题
-            {
-
-            }
-        }
-
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
@@ -1015,5 +992,6 @@ namespace HostComputerForRail
         {
             label_SystemTime.Text = DateTime.Now + "";
         }
+        #endregion
     }
 }
