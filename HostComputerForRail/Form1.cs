@@ -13,6 +13,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Numerics;
 using CefSharp.WinForms;
+using SerialCommunication;
 
 namespace HostComputerForRail
 {
@@ -21,10 +22,15 @@ namespace HostComputerForRail
         ChromiumWebBrowser WebBrowser;
         private DateTime TimeStart = DateTime.Now;
         bool bool_start = false;
+        Form_Serial form2 = new Form_Serial();
 
         public Form1()
         {
             InitializeComponent();
+            form2.TopLevel = false;
+            tabPage4.Controls.Add(form2);
+            form2.Show();
+            //Application.Run(new Form_Serial());
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -74,6 +80,7 @@ namespace HostComputerForRail
                 bool_start = true;
                 timer_Main.Start();
                 timer_FFT.Start();
+                timer_Gauge.Start();
             }
             catch (Exception ex)
             {
@@ -88,6 +95,7 @@ namespace HostComputerForRail
                 bool_start = false;
                 timer_Main.Stop();
                 timer_FFT.Stop();
+                timer_Gauge.Stop();
                 Thread.Sleep(50);
             }
             catch (Exception ex)
@@ -214,6 +222,7 @@ namespace HostComputerForRail
         private double[,] error = new double[2, 3];   //零点漂移误差阈值
         private double[,] a_AfterTransform_Init = new double[2, 3]; //初始误差
         private List<double>[,] FixInit_Data = { { new List<double>(), new List<double>(), new List<double>() }, { new List<double>(), new List<double>(), new List<double>() } };
+        private int gauge = 0;  //轨距
 
         private void Transform()
         {
@@ -625,6 +634,80 @@ namespace HostComputerForRail
             //    toolStripStatusLabel_SQL.Text = "数据库已连接";
             //}
         }
+
+        private void SQLread()
+        {
+            // SQL server
+            string connsql = "server=FU-QINGCHEN\\SQLEXPRESS;integrated security=SSPI;database=Test";
+            try
+            {
+                using (SqlConnection mySQL = new SqlConnection())
+                {
+                    SqlDataReader sqlDataReader;
+                    mySQL.ConnectionString = connsql;
+                    // 打开数据库连接
+                    mySQL.Open();
+                    // 向数据库中读取数据的命令
+                    string sqlDateRead = "SELECT TOP (1) [length] FROM [Test].[dbo].[Gauge_OriginDate] ORDER BY ID DESC";
+                    // 建立一个命令
+                    SqlCommand sqlCommand = new SqlCommand(sqlDateRead, mySQL);
+                    // 执行命令
+                    sqlDataReader = sqlCommand.ExecuteReader();
+                    if (sqlDataReader.HasRows)
+                    {
+                        if (sqlDataReader.Read())
+                        {
+                            var tempdata = sqlDataReader.GetValue(0);
+                            label44.Text = tempdata + "";
+                        }
+                    }
+                    //label44.Text = "3";
+                    sqlDataReader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                toolStripStatusLabel_SQL.Text = "数据库已连接";
+            }
+
+            // Azure SQL
+            //SqlConnectionStringBuilder sqlConnectionStringBuilder_Azure = new SqlConnectionStringBuilder();
+            //sqlConnectionStringBuilder_Azure.DataSource = "mysampleserver.database.chinacloudapi.cn";
+            //sqlConnectionStringBuilder_Azure.UserID = "WHUT";
+            //sqlConnectionStringBuilder_Azure.Password = "0121618380615Fqc";
+            //sqlConnectionStringBuilder_Azure.InitialCatalog = "RailOriginDate";
+            //try
+            //{
+            //    using(SqlConnection sqlConnection = new SqlConnection(sqlConnectionStringBuilder_Azure.ConnectionString))
+            //    {
+            //        sqlConnection.Open();
+            //        var format = "yyyy-MM-dd HH:mm:ss:fffffff";
+            //        var stringDate = DateTime.Now.ToString(format);
+            //        var convertedBack = DateTime.ParseExact(stringDate, format, CultureInfo.InvariantCulture);
+            //        sqlDate = "insert Inclination_OriginDate(DateTimes,"
+            //            + "Accelerate1_X,Accelerate1_Y,Accelerate1_Z," + "Inclination1_X,Inclination1_Y,Inclination1_Z,"
+            //            + "Accelerate2_X,Accelerate2_Y,Accelerate2_Z," + "Inclination2_X,Inclination2_Y,Inclination2_Z"
+            //            + ")values(SYSDATETIME(),"
+            //            + a_AfterTransform[0, 0] + "," + a_AfterTransform[0, 1] + "," + a_AfterTransform[0, 2] + "," + Angle[0, 0] + "," + Angle[0, 1] + "," + Angle[0, 2] + ","
+            //            + a_AfterTransform[1, 0] + "," + a_AfterTransform[1, 1] + "," + a_AfterTransform[1, 2] + "," + Angle[1, 0] + "," + Angle[1, 1] + "," + Angle[1, 2]
+            //            + ")";
+            //        SqlCommand sqlCommand = new SqlCommand(sqlDate, sqlConnection);
+            //        sqlCommand.ExecuteNonQuery();
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+            //    toolStripStatusLabel_SQL.Text = "错误：" + ex.Message;
+            //}
+            //finally
+            //{
+            //    toolStripStatusLabel_SQL.Text = "数据库已连接";
+            //}
+        }
         #endregion
 
         #region 倾角仪传输部分
@@ -971,16 +1054,17 @@ namespace HostComputerForRail
             System.Environment.Exit(0);
         }
 
-        private void Panel1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Panel1_Paint(object sender, PaintEventArgs e)
         {
             WebBrowser = new ChromiumWebBrowser("file:///C:/Users/Administrator/Desktop/Dark.html");
             WebBrowser.Dock = DockStyle.Fill;
             panel1.Controls.Add(WebBrowser);
+        }
+
+        private void Timer_Gauge_Tick(object sender, EventArgs e)
+        {
+            SQLread();
+            //label44.Text = gauge + "";
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)

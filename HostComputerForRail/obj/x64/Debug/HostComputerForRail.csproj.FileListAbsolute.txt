@@ -268,3 +268,4 @@ E:\GitHub\HostComputerForRail\HostComputerForRail\obj\x64\Debug\HostComputerForR
 E:\GitHub\HostComputerForRail\HostComputerForRail\obj\x64\Debug\HostComputerForRail.csproj.CopyComplete
 E:\GitHub\HostComputerForRail\HostComputerForRail\obj\x64\Debug\HostComputerForRail.exe
 E:\GitHub\HostComputerForRail\HostComputerForRail\obj\x64\Debug\HostComputerForRail.pdb
+E:\GitHub\HostComputerForRail\HostComputerForRail\obj\x64\Debug\SerialCommunication.Form_Serial.resources
