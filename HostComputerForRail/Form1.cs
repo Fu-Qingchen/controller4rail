@@ -162,7 +162,7 @@ namespace HostComputerForRail
         #region 图像识别程序段
         private VideoCapture VideoCapture_ImageRecognize;
         private Mat frame;
-        private int index_ImageRecognize = 3;
+        private int index_ImageRecognize = 0;
 
         private void VideoCapture_ImageRecognize_Load()
         {
@@ -659,6 +659,18 @@ namespace HostComputerForRail
                         {
                             var tempdata = sqlDataReader.GetValue(0);
                             label44.Text = tempdata + "";
+                            double doubleformdata = Convert.ToDouble(tempdata);
+                            chart3.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), doubleformdata);
+                            if (chart3.Series[0].Points.Count >= 500)
+                            {
+                                //chart1.Series[0].Points.RemoveAt(0);
+                                //chart1.Series[1].Points.RemoveAt(0);
+                                //chart1.Series[2].Points.RemoveAt(0);
+                                //chart1.Series[3].Points.RemoveAt(0);
+                                chart3.Series[0].Points.RemoveAt(0);
+                                //chart3.Series[5].Points.RemoveAt(0);
+                                frequency_start = true;
+                            }
                         }
                     }
                     //label44.Text = "3";
@@ -1013,18 +1025,18 @@ namespace HostComputerForRail
             //chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 1]);
             //chart1.Series[2].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 2]);
             //chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 2]);
-            chart3.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 0]);
-            chart3.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 0]);
-            if (chart3.Series[4].Points.Count >= 500)
-            {
+            //chart3.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 0]);
+            //chart3.Series[5].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 0]);
+            //if (chart3.Series[4].Points.Count >= 500)
+            //{
                 //chart3.Series[0].Points.RemoveAt(0);
                 //chart3.Series[1].Points.RemoveAt(0);
                 //chart1.Series[2].Points.RemoveAt(0);
                 //chart1.Series[3].Points.RemoveAt(0);
-                chart3.Series[4].Points.RemoveAt(0);
-                chart3.Series[5].Points.RemoveAt(0);
-                frequency_start = true;
-            }
+                //chart3.Series[4].Points.RemoveAt(0);
+                //chart3.Series[5].Points.RemoveAt(0);
+                //frequency_start = true;
+            //}
         }
 
         private void chart6_Run()
@@ -1065,6 +1077,16 @@ namespace HostComputerForRail
         {
             SQLread();
             //label44.Text = gauge + "";
+        }
+
+        private void Label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Label_Inclinometer1_Ay_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)

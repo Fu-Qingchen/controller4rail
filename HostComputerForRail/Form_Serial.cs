@@ -245,11 +245,15 @@ namespace SerialCommunication
         /// </summary>
         private void dataSolution()
         {
+            Thread.Sleep(1);
             string dataOrigin_string = receivedData.Replace(" ", "");
-            dataOrigin_string = dataOrigin_string.Substring(6, 4);
-            receivedData_int = Int32.Parse(dataOrigin_string, System.Globalization.NumberStyles.HexNumber);
-            label14.Text = receivedData_int + "";
-            SQLconnect();
+            if (dataOrigin_string.Length == 14)
+            {
+                dataOrigin_string = dataOrigin_string.Substring(6, 4);
+                receivedData_int = Int32.Parse(dataOrigin_string, System.Globalization.NumberStyles.HexNumber);
+                label14.Text = receivedData_int + "";
+                SQLconnect();
+            }
         }
 
         private void SQLconnect()
@@ -274,6 +278,7 @@ namespace SerialCommunication
                     SqlCommand sqlCommand = new SqlCommand(sqlDate, mySQL);
                     // 执行命令
                     sqlCommand.ExecuteNonQuery();
+                    Thread.Sleep(1);
                 }
             }
             catch (Exception ex)
@@ -357,6 +362,7 @@ namespace SerialCommunication
                         receivedData = strRcv;
                         dataSolution();
                         RcvMessage(strRcv);
+                        Thread.Sleep(2);
                     }
                     catch (Exception ex)
                     {
@@ -483,7 +489,7 @@ namespace SerialCommunication
             try
             {
                 //Interval的单位是ms
-                int isecond = int.Parse(strSecond) * 1000;
+                int isecond = int.Parse(strSecond);
                 timeSend.Interval = isecond;
 
                 if (timeSend.Enabled==true)

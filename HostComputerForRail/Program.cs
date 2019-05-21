@@ -24,6 +24,7 @@ namespace HostComputerForRail
             Application.Run(new Form1());
             //Application.Run(new Form_Serial());
         }
+
         private static void ThreadStart()
         {
             Application.Run(new Form_Serial()); // <-- other form started on its own UI thread

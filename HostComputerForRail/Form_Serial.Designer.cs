@@ -395,9 +395,9 @@
             this.label7.ForeColor = System.Drawing.Color.White;
             this.label7.Location = new System.Drawing.Point(802, 227);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(25, 20);
+            this.label7.Size = new System.Drawing.Size(28, 20);
             this.label7.TabIndex = 17;
-            this.label7.Text = "秒";
+            this.label7.Text = "ms";
             // 
             // label8
             // 
@@ -445,7 +445,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 386);
+            this.label14.Location = new System.Drawing.Point(6, 383);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(73, 20);
             this.label14.TabIndex = 37;
