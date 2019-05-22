@@ -661,7 +661,7 @@ namespace HostComputerForRail
                             label44.Text = tempdata + "";
                             double doubleformdata = Convert.ToDouble(tempdata);
                             chart3.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), doubleformdata);
-                            if (chart3.Series[0].Points.Count >= 500)
+                            if (chart3.Series[0].Points.Count >= 200)
                             {
                                 //chart1.Series[0].Points.RemoveAt(0);
                                 //chart1.Series[1].Points.RemoveAt(0);
@@ -981,8 +981,8 @@ namespace HostComputerForRail
         private bool frequency_start = false;
         private void chart1_Run()
         {
-            chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 1]);
-            chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 1]);
+            chart1.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 0]);
+            chart1.Series[1].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 0]);
             //chart1.Series[2].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[0, 2]);
             //chart1.Series[3].Points.AddXY(DateTime.Now.Millisecond.ToString(), a_AfterTransform[1, 2]);
             //chart1.Series[4].Points.AddXY(DateTime.Now.Millisecond.ToString(), Angle[0, 0]);

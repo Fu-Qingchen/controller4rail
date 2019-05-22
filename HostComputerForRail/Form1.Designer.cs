@@ -661,7 +661,7 @@
             this.groupBox2.Size = new System.Drawing.Size(653, 459);
             this.groupBox2.TabIndex = 23;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "X轴加速度";
+            this.groupBox2.Text = "轨距";
             // 
             // chart3
             // 
@@ -675,13 +675,11 @@
             chartArea2.AxisX.LabelStyle.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             chartArea2.AxisX.LineColor = System.Drawing.SystemColors.ControlDarkDark;
             chartArea2.AxisX.LineWidth = 2;
-            chartArea2.AxisX.LogarithmBase = 500D;
+            chartArea2.AxisX.LogarithmBase = 200D;
             chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.SystemColors.ControlDarkDark;
             chartArea2.AxisX.MajorGrid.LineWidth = 2;
-            chartArea2.AxisX.Maximum = 0.1D;
-            chartArea2.AxisX.Minimum = -0.1D;
             chartArea2.AxisX.ScaleBreakStyle.LineColor = System.Drawing.SystemColors.ControlDarkDark;
-            chartArea2.AxisX.ScaleView.Size = 500D;
+            chartArea2.AxisX.ScaleView.Size = 200D;
             chartArea2.AxisX.TitleForeColor = System.Drawing.Color.White;
             chartArea2.AxisX2.IsMarginVisible = false;
             chartArea2.AxisX2.IsStartedFromZero = false;
@@ -1274,7 +1272,7 @@
             this.groupBox3.Size = new System.Drawing.Size(653, 473);
             this.groupBox3.TabIndex = 19;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Y轴加速度";
+            this.groupBox3.Text = "X轴加速度";
             // 
             // chart1
             // 
