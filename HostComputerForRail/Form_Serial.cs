@@ -59,12 +59,14 @@ namespace SerialCommunication
         //发送信息的设置
         public void SendMessage(string msg)
         {
+            Thread.Sleep(6);
             LogAppendDelegate lad = new LogAppendDelegate(LogAppend);
             txtRcv.Invoke(lad, Color.Green, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss ：") + msg);
         }
         //接收信息的设置
         public void RcvMessage(string msg)
         {
+            Thread.Sleep(5);
             LogAppendDelegate lad = new LogAppendDelegate(LogAppend);
             txtRcv.Invoke(lad, Color.Blue, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss ：") + msg);
         }
@@ -732,6 +734,7 @@ namespace SerialCommunication
 
             foreach (byte data in comByte)
             {
+                Thread.Sleep(5);
                 builder.Append(Convert.ToString(data,16).PadLeft(2,'0').PadRight(3,' '));
             }
             return builder.ToString().ToUpper();
@@ -749,6 +752,7 @@ namespace SerialCommunication
             for (int i = 0; i < msg.Length; i+=2)
             {
                 comBuffer[i / 2] = (byte)Convert.ToByte(msg.Substring(i, 2), 16);
+                Thread.Sleep(7);
             }
             return comBuffer;
         }

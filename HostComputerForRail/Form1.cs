@@ -190,7 +190,7 @@ namespace HostComputerForRail
                     imageBox1.Image = img;
                     Image<Gray, Byte> grayImage = img.Convert<Gray, Byte>();
                     imageBox2.Image = grayImage;
-                    Image<Gray, Byte> addImage = grayImage.ThresholdBinary(new Gray(80), new Gray(255));
+                    Image<Gray, Byte> addImage = grayImage.ThresholdBinary(new Gray(50), new Gray(255));
                     imageBox3.Image = addImage;
                     Image<Gray, Byte> cannyGray = grayImage.Canny(70, 200);
                     imageBox4.Image = cannyGray;
@@ -658,8 +658,9 @@ namespace HostComputerForRail
                         if (sqlDataReader.Read())
                         {
                             var tempdata = sqlDataReader.GetValue(0);
-                            label44.Text = tempdata + "";
                             double doubleformdata = Convert.ToDouble(tempdata);
+                            doubleformdata = (doubleformdata-490) * 0.01 + 1434;
+                            label44.Text = doubleformdata + "";
                             chart3.Series[0].Points.AddXY(DateTime.Now.Millisecond.ToString(), doubleformdata);
                             if (chart3.Series[0].Points.Count >= 200)
                             {

@@ -781,9 +781,9 @@
             this.label_Name.ForeColor = System.Drawing.Color.White;
             this.label_Name.Location = new System.Drawing.Point(66, 27);
             this.label_Name.Name = "label_Name";
-            this.label_Name.Size = new System.Drawing.Size(597, 28);
+            this.label_Name.Size = new System.Drawing.Size(392, 28);
             this.label_Name.TabIndex = 40;
-            this.label_Name.Text = "基于子母机协同的高效铁轨检修机操作平台 - 武汉理工大学ICADCS";
+            this.label_Name.Text = "基于子母机协同的高效铁轨检修机操作平台";
             // 
             // pictureBox_Logo
             // 

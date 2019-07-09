@@ -272,9 +272,9 @@
             this.label_Name.ForeColor = System.Drawing.Color.White;
             this.label_Name.Location = new System.Drawing.Point(72, 19);
             this.label_Name.Name = "label_Name";
-            this.label_Name.Size = new System.Drawing.Size(597, 28);
+            this.label_Name.Size = new System.Drawing.Size(397, 28);
             this.label_Name.TabIndex = 2;
-            this.label_Name.Text = "基于子母机协同的高效铁轨检修机操作平台 - 武汉理工大学ICADCS";
+            this.label_Name.Text = "基于子母机协同的高效铁轨检修机操作平台 ";
             // 
             // pictureBox_Logo
             // 
@@ -313,7 +313,7 @@
             // pictureBox_Start
             // 
             this.pictureBox_Start.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_Start.Image")));
-            this.pictureBox_Start.Location = new System.Drawing.Point(729, 19);
+            this.pictureBox_Start.Location = new System.Drawing.Point(525, 19);
             this.pictureBox_Start.Name = "pictureBox_Start";
             this.pictureBox_Start.Size = new System.Drawing.Size(35, 35);
             this.pictureBox_Start.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -324,7 +324,7 @@
             // pictureBox_End
             // 
             this.pictureBox_End.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_End.Image")));
-            this.pictureBox_End.Location = new System.Drawing.Point(770, 19);
+            this.pictureBox_End.Location = new System.Drawing.Point(566, 19);
             this.pictureBox_End.Name = "pictureBox_End";
             this.pictureBox_End.Size = new System.Drawing.Size(35, 35);
             this.pictureBox_End.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -343,7 +343,7 @@
             // pictureBox_fixSensor
             // 
             this.pictureBox_fixSensor.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_fixSensor.Image")));
-            this.pictureBox_fixSensor.Location = new System.Drawing.Point(688, 19);
+            this.pictureBox_fixSensor.Location = new System.Drawing.Point(484, 19);
             this.pictureBox_fixSensor.Name = "pictureBox_fixSensor";
             this.pictureBox_fixSensor.Size = new System.Drawing.Size(35, 35);
             this.pictureBox_fixSensor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -694,6 +694,8 @@
             chartArea2.AxisY.LineColor = System.Drawing.SystemColors.ControlDarkDark;
             chartArea2.AxisY.LineWidth = 2;
             chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.SystemColors.ControlDark;
+            chartArea2.AxisY.Maximum = 1445D;
+            chartArea2.AxisY.Minimum = 1425D;
             chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.ControlDarkDark;
             chartArea2.AxisY2.IsLabelAutoFit = false;
             chartArea2.AxisY2.IsStartedFromZero = false;
